@@ -20,4 +20,4 @@ A small responsive cafe website built with plain HTML & CSS (Flexbox + CSS Grid)
 Aidos, Arnur, Mukhammajon.
 
 ## Deploy
-_Add the live GitHub Pages / Netlify link here once published._
+https://axxelium.github.io/s-msung-team-WEB/
