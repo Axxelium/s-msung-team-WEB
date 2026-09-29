@@ -1,0 +1,93 @@
+/* Media Queries used only by responsive.html, which does NOT load Bootstrap. */
+
+.shell {
+  padding: 0 12px;
+}
+
+h1, h2, h3, p {
+  margin-top: 0;
+}
+
+h3 {
+  margin-bottom: 7px;
+}
+
+.demo-bar {
+  padding: 20px 0;
+  background: var(--sand);
+}
+
+.demo-bar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.demo-page {
+  padding: 32px 0 48px;
+}
+
+.demo-section {
+  margin-bottom: 48px;
+}
+
+.demo-footer {
+  padding: 20px 0 32px;
+}
+
+.demo-footer p {
+  margin: 5px 0 0;
+  font-size: 0.9rem;
+}
+
+.viewport-label::after {
+  content: "mobile (under 576px): 1 card per row";
+}
+
+@media (min-width: 576px) {
+  .viewport-label::after {
+    content: "tablet (576–991px): 2 cards per row";
+  }
+}
+
+@media (min-width: 992px) {
+  .viewport-label::after {
+    content: "desktop (992px and up): 3 cards per row";
+  }
+}
+
+.mq-cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+
+@media (min-width: 576px) {
+  .mq-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 992px) {
+  .mq-cards {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.mq-cards .card {
+  display: flex;
+  flex-direction: column;
+}
+
+.mq-cards .card-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 17px;
+}
+
+.mq-cards .price-line {
+  margin-top: auto;
+  padding-top: 15px;
+}
