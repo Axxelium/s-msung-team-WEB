@@ -15,7 +15,9 @@
         <a class="navbar-brand brand m-0 p-0" href="index.html">
           <span class="brand-mark">m</span>
           <span>cafe mania</span>
+          <span id="live-clock" class="ms-3 small fw-bold text-muted"></span>
         </a>
+        <button id="themeToggle" class="btn btn-sm btn-outline-secondary ms-2">🌙 Dark Mode</button>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -106,8 +108,40 @@
         </div>
       </section>
 
+      <section class="contact-callout my-5 p-4 p-md-5 text-center rounded-4">
+        <span class="eyebrow">We're here to help</span>
+        <h2>Have a question?</h2>
+        <p>Send the Cafe Mania team a message.</p>
+        <button class="btn btn-primary" type="button" data-modal-open="contact">Contact us</button>
+      </section>
+
     </div>
   </main>
+
+  <div class="modal-overlay" id="contactModal" role="dialog" aria-modal="true" aria-labelledby="contactModalTitle" hidden>
+    <div class="modal-card">
+      <button class="modal-close" type="button" data-modal-close aria-label="Close contact form">&times;</button>
+      <span class="eyebrow">Cafe Mania</span>
+      <h2 id="contactModalTitle">Contact us</h2>
+      <p>Leave a message and our team will be happy to help.</p>
+      <form id="contactModalForm">
+        <div class="mb-3">
+          <label class="form-label" for="contactName">Your name</label>
+          <input class="form-control" id="contactName" name="name" type="text" autocomplete="name" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label" for="contactEmail">Email address</label>
+          <input class="form-control" id="contactEmail" name="email" type="email" autocomplete="email" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label" for="contactMessage">Message</label>
+          <textarea class="form-control" id="contactMessage" name="message" rows="3" required></textarea>
+        </div>
+        <button class="btn btn-primary" type="submit">Send message</button>
+      </form>
+    </div>
+  </div>
+  <div class="site-toast" id="siteToast" role="status" aria-live="polite" hidden></div>
 
   <footer class="py-4">
     <div class="container shell d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
@@ -132,6 +166,6 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
+  <script src="script.js"></script>
 </body>
 </html>
