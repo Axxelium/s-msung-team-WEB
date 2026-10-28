@@ -26,13 +26,14 @@
           <li class="nav-item"><a class="nav-link rounded-pill px-3 py-2 fw-bold small active bg-primary" href="index.html" aria-current="page">Home</a></li>
           <li class="nav-item"><a class="nav-link rounded-pill px-3 py-2 fw-bold small" href="menu.html">Menu</a></li>
           <li class="nav-item"><a class="nav-link rounded-pill px-3 py-2 fw-bold small" href="about.html">About</a></li>
-          <li class="nav-item"><a class="nav-link rounded-pill px-3 py-2 fw-bold small bg-primary text-white" href="cart.html">Cart</a></li>
+          <li class="nav-item"><a class="nav-link rounded-pill px-3 py-2 fw-bold small bg-primary text-white" href="cart.html">Cart <span class="cart-badge" data-cart-count aria-label="0 items in cart">0</span></a></li>
           </ul>
         </div>
       </div>
     </nav>
   </header>
 
+  <noscript><p class="container py-3">Please enable JavaScript to use the menu, cart and checkout.</p></noscript>
   <main class="page pt-4 pt-md-5 pb-5">
     <div class="container shell">
 
@@ -65,47 +66,7 @@
           </div>
           <a class="btn btn-secondary btn-sm align-self-start align-self-sm-auto" href="menu.html">View all items</a>
         </div>
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-          <div class="col">
-            <article class="card h-100">
-              <img class="card-img-top" src="images/cofee.jpg" alt="Coffee and croissant set">
-              <div class="card-body d-flex flex-column p-3">
-                <h3 class="card-title">Morning Set</h3>
-                <p class="card-text">Cappuccino, a fresh croissant, and jam.</p>
-                <div class="price-line d-flex justify-content-between align-items-center mt-auto pt-3">
-                  <span>2,490 ₸</span>
-                  <a class="btn btn-primary btn-round rounded-circle p-0" href="cart.html" aria-label="Add Morning Set to cart">＋</a>
-                </div>
-              </div>
-            </article>
-          </div>
-          <div class="col">
-            <article class="card h-100">
-              <img class="card-img-top" src="images/zavtrak.jpg" alt="Breakfast plate with toast and berries">
-              <div class="card-body d-flex flex-column p-3">
-                <h3 class="card-title">Mania Brunch</h3>
-                <p class="card-text">Toast, egg, berries, and fresh filter coffee.</p>
-                <div class="price-line d-flex justify-content-between align-items-center mt-auto pt-3">
-                  <span>3,190 ₸</span>
-                  <a class="btn btn-primary btn-round rounded-circle p-0" href="cart.html" aria-label="Add Mania Brunch to cart">＋</a>
-                </div>
-              </div>
-            </article>
-          </div>
-          <div class="col">
-            <article class="card h-100">
-              <img class="card-img-top" src="images/pirog.jpg" alt="Berry pastry">
-              <div class="card-body d-flex flex-column p-3">
-                <h3 class="card-title">Berry Puff</h3>
-                <p class="card-text">Warm pastry with seasonal berries.</p>
-                <div class="price-line d-flex justify-content-between align-items-center mt-auto pt-3">
-                  <span>1,490 ₸</span>
-                  <a class="btn btn-primary btn-round rounded-circle p-0" href="cart.html" aria-label="Add Berry Puff to cart">＋</a>
-                </div>
-              </div>
-            </article>
-          </div>
-        </div>
+        <div id="favorites-grid" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4"></div>
       </section>
 
       <section class="contact-callout my-5 p-4 p-md-5 text-center rounded-4">
@@ -156,6 +117,7 @@
       </div>
       <div>
         <p class="mb-1 small">Find us on social media</p>
+        <button class="btn btn-outline-primary btn-sm mb-3" type="button" data-sound-toggle aria-pressed="true">Sound on</button>
         <div class="socials d-flex gap-2">
           <a href="#">f</a>
           <a href="#">in</a>
@@ -166,6 +128,10 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/catalog.js"></script>
+  <script src="js/cart.js"></script>
   <script src="script.js"></script>
+  <script src="js/site-ui.js"></script>
+  <script src="js/shop.js"></script>
 </body>
 </html>

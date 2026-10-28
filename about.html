@@ -26,13 +26,14 @@
           <li class="nav-item"><a class="nav-link rounded-pill px-3 py-2 fw-bold small" href="index.html">Home</a></li>
           <li class="nav-item"><a class="nav-link rounded-pill px-3 py-2 fw-bold small" href="menu.html">Menu</a></li>
           <li class="nav-item"><a class="nav-link rounded-pill px-3 py-2 fw-bold small active bg-primary" href="about.html" aria-current="page">About</a></li>
-          <li class="nav-item"><a class="nav-link rounded-pill px-3 py-2 fw-bold small bg-primary text-white" href="cart.html">Cart</a></li>
+          <li class="nav-item"><a class="nav-link rounded-pill px-3 py-2 fw-bold small bg-primary text-white" href="cart.html">Cart <span class="cart-badge" data-cart-count aria-label="0 items in cart">0</span></a></li>
           </ul>
         </div>
       </div>
     </nav>
   </header>
 
+  <noscript><p class="container py-3">Please enable JavaScript to use the menu, cart and checkout.</p></noscript>
   <main class="page pt-4 pt-md-5 pb-5">
     <div class="container shell">
 
@@ -265,6 +266,7 @@
         <p class="mt-1 mb-0 small"><a class="text-decoration-underline" href="responsive.html">Media queries demo</a></p>
       </div>
       <div>
+        <button class="btn btn-outline-primary btn-sm mb-3" type="button" data-sound-toggle aria-pressed="true">Sound on</button>
         <div class="socials d-flex gap-2">
           <a href="#">f</a>
           <a href="#">in</a>
@@ -275,6 +277,9 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/catalog.js"></script>
+  <script src="js/cart.js"></script>
   <script src="script.js"></script>
+  <script src="js/site-ui.js"></script>
 </body>
 </html>
