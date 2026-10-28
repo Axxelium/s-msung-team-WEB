@@ -703,7 +703,53 @@ footer {
     transform: translateY(0);
 }
 
-/* Dark theme colors are scoped to site surfaces so controls remain usable. */
+/* Predefined palettes share the site's existing color variables. */
+body.green-theme {
+    --wine: #286341;
+    --wine-dark: #19482c;
+    --cream: #f1faf3;
+    --sand: #d7eadc;
+    --ink: #173724;
+    --muted: #4b6553;
+    --line: #b5d1bd;
+    --bs-primary-rgb: 40, 99, 65;
+}
+body.blue-theme {
+    --wine: #285f96;
+    --wine-dark: #19446f;
+    --cream: #f0f7ff;
+    --sand: #d8e7f6;
+    --ink: #18344f;
+    --muted: #4d6277;
+    --line: #b6cce1;
+    --bs-primary-rgb: 40, 95, 150;
+}
+body.red-theme {
+    --wine: #a32e3b;
+    --wine-dark: #7c1e29;
+    --cream: #fff3f3;
+    --sand: #f4d9dc;
+    --ink: #481f26;
+    --muted: #78555a;
+    --line: #dfb6bd;
+    --bs-primary-rgb: 163, 46, 59;
+}
+body:is(.green-theme, .blue-theme, .red-theme) {
+    --bs-primary: var(--wine);
+    --bs-body-color: var(--ink);
+    --bs-secondary-color: var(--muted);
+    --bs-border-color: var(--line);
+}
+body:is(.green-theme, .blue-theme, .red-theme) :is(.form-control, .form-select, .accordion-content) {
+    background-color: var(--cream);
+    border-color: var(--line);
+}
+body:is(.green-theme, .blue-theme, .red-theme) :is(.tag, .benefit, .order-steps li, .socials a, .input-group-text, .accordion-header) {
+    background-color: var(--sand);
+    color: var(--ink);
+}
+
+/* Keep the original dark palette and ensure all surfaces remain readable. */
 body.dark-theme {
     --cream: #292523;
     --sand: #1d1b1a;
@@ -750,6 +796,28 @@ body.dark-theme .form-control::placeholder {
 }
 body.dark-theme .accordion-header:hover {
     background: #403a36;
+}
+body.dark-theme :is(.cart-item, .schedule, .floating-note, .benefit, .order-steps li, .socials a, .tag) {
+    background: var(--cream);
+    color: var(--ink);
+}
+body.dark-theme :is(.navbar-brand, .modal-close) {
+    color: var(--ink);
+}
+body.dark-theme .navbar {
+    --bs-navbar-color: var(--ink);
+}
+body.dark-theme .category-nav {
+    --bs-nav-link-color: var(--ink);
+}
+body.dark-theme .field-error {
+    color: #ffb4ab;
+}
+body.dark-theme .form-control.is-invalid {
+    border-color: #ffb4ab;
+}
+body.dark-theme .form-text {
+    color: var(--muted);
 }
 
 @media (prefers-reduced-motion: reduce) {

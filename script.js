@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     checkoutForm.noValidate = true;
 
     const fields = Array.from(
-      checkoutForm.querySelectorAll('input[required], textarea[required], select[required]')
+      checkoutForm.querySelectorAll('input[required], textarea, select[required]')
     );
 
     const errorFor = (field) => {
@@ -21,10 +21,37 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const messageFor = (field) => {
-      if (!field.value.trim()) return 'This field is required.';
-      if (field.type === 'email' && !field.validity.valid) return 'Enter a valid email address.';
-      if (field.id === 'password' && field.value.length < 6) {
-        return 'Password must contain at least 6 characters.';
+      const value = field.type === 'password' ? field.value : field.value.trim();
+      if (!value.trim()) return field.required ? 'This field is required.' : '';
+      if (field.maxLength > 0 && value.length > field.maxLength) {
+        return `Use no more than ${field.maxLength} characters.`;
+      }
+      if (field.id === 'name' && (value.length < 2 || !/^[\p{L}\p{M} .’'\-]+$/u.test(value) || !/\p{L}/u.test(value))) {
+        return 'Enter your name using at least 2 characters, without numbers or special symbols.';
+      }
+      if (field.type === 'email' && (field.validity.typeMismatch || !/^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/.test(value))) {
+        return 'Enter a valid email address, for example you@example.com.';
+      }
+      if (field.id === 'phone') {
+        const digits = value.replace(/\D/g, '');
+        if (!/^\+?[\d\s()\-]+$/.test(value) || digits.length < 10 || digits.length > 15 || /^0+$/.test(digits)) {
+          return 'Enter a phone number with 10–15 digits; spaces, brackets and a leading + are allowed.';
+        }
+      }
+      if (field.id === 'address' && (value.length < 5 || !/[\p{L}\p{N}]/u.test(value))) {
+        return 'Enter a delivery address with at least 5 characters.';
+      }
+      if (field.id === 'password') {
+        if (value.length < 8) return 'Password is too weak. Use at least 8 characters.';
+        const substitutions = { '@': 'a', '4': 'a', '0': 'o', '3': 'e', '$': 's', '5': 's', '1': 'i', '!': 'i', '7': 't' };
+        const normalized = value.toLowerCase().replace(/[@403$51!7]/g, (character) => substitutions[character]);
+        const commonPasswords = ['password', 'qwerty', 'letmein', 'welcome', 'admin', 'iloveyou', 'abc123', '123456', 'пароль'];
+        if (commonPasswords.some((word) => value.toLowerCase().includes(word) || normalized.includes(word)) || /(.{1,4})\1{2,}/u.test(value)) {
+          return 'Password is too easy to guess. Avoid common words, sequences and repeated characters.';
+        }
+        if (!/\p{Lu}/u.test(value) || !/\p{Ll}/u.test(value) || !/\d/.test(value) || !/[^\p{L}\p{N}\s]/u.test(value)) {
+          return 'Password is too weak. Include uppercase and lowercase letters, a number and a special character.';
+        }
       }
       if (field.id === 'confirm-password') {
         const password = checkoutForm.querySelector('#password');
@@ -39,7 +66,11 @@ document.addEventListener('DOMContentLoaded', () => {
       error.textContent = message;
       field.classList.toggle('is-invalid', Boolean(message));
       field.setAttribute('aria-invalid', String(Boolean(message)));
-      if (message) field.setAttribute('aria-describedby', error.id || (error.id = `${field.id}-error`));
+      error.id ||= `${field.id}-error`;
+      const descriptions = new Set((field.getAttribute('aria-describedby') || '').split(/\s+/).filter(Boolean));
+      descriptions.delete(error.id);
+      if (message) descriptions.add(error.id);
+      if (descriptions.size) field.setAttribute('aria-describedby', [...descriptions].join(' '));
       else field.removeAttribute('aria-describedby');
       return !message;
     };
@@ -52,10 +83,16 @@ document.addEventListener('DOMContentLoaded', () => {
           if (confirmation?.value) validateField(confirmation);
         }
       });
-      field.addEventListener('blur', () => validateField(field));
+      field.addEventListener('blur', () => {
+        if (field.type !== 'password') field.value = field.value.trim();
+        validateField(field);
+      });
     });
 
     checkoutForm.addEventListener('submit', (event) => {
+      fields.forEach((field) => {
+        if (field.type !== 'password') field.value = field.value.trim();
+      });
       const valid = fields.map(validateField).every(Boolean);
       if (!valid) {
         event.preventDefault();
@@ -156,28 +193,37 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   const themeButton = document.getElementById('themeToggle');
-  if (themeButton) {
-    try {
-      document.body.classList.toggle('dark-theme', localStorage.getItem('cafe-mania-theme') === 'dark');
-    } catch (_) {
-    }
-
-    const updateThemeButton = () => {
-      const dark = document.body.classList.contains('dark-theme');
-      themeButton.textContent = dark ? '☀️ Light Mode' : '🌙 Dark Mode';
-      themeButton.setAttribute('aria-pressed', String(dark));
-    };
-    updateThemeButton();
-
-    themeButton.addEventListener('click', () => {
-      const dark = document.body.classList.toggle('dark-theme');
-      try {
-        localStorage.setItem('cafe-mania-theme', dark ? 'dark' : 'light');
-      } catch (_) {
-      }
-      updateThemeButton();
-    });
+  const themes = ['light', 'dark', 'green', 'blue', 'red'];
+  let currentTheme = 'light';
+  try {
+    const savedTheme = localStorage.getItem('cafe-mania-theme');
+    if (themes.includes(savedTheme)) currentTheme = savedTheme;
+  } catch (_) {
+    // Theme switching still works when browser storage is unavailable.
   }
+
+  const applyTheme = () => {
+    themes.forEach((theme) => document.body.classList.toggle(`${theme}-theme`, theme === currentTheme));
+    document.body.dataset.theme = currentTheme;
+    document.documentElement.setAttribute('data-bs-theme', currentTheme === 'dark' ? 'dark' : 'light');
+    if (themeButton) {
+      themeButton.textContent = 'Change theme';
+      const nextTheme = themes[(themes.indexOf(currentTheme) + 1) % themes.length];
+      themeButton.setAttribute('aria-label', `Change theme. Current: ${currentTheme}. Next: ${nextTheme}.`);
+      themeButton.title = `Current: ${currentTheme}. Next: ${nextTheme}.`;
+    }
+  };
+  applyTheme();
+
+  themeButton?.addEventListener('click', () => {
+    currentTheme = themes[(themes.indexOf(currentTheme) + 1) % themes.length];
+    applyTheme();
+    try {
+      localStorage.setItem('cafe-mania-theme', currentTheme);
+    } catch (_) {
+      // Storage is optional; the selected theme is already applied.
+    }
+  });
 
   const clockElement = document.getElementById('live-clock');
   if (clockElement) {

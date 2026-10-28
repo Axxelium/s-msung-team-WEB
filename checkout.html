@@ -17,7 +17,7 @@
           <span>cafe mania</span>
           <span id="live-clock" class="ms-3 small fw-bold text-muted"></span>
         </a>
-        <button id="themeToggle" class="btn btn-sm btn-outline-secondary ms-2">🌙 Dark Mode</button>
+        <button id="themeToggle" type="button" class="btn btn-sm btn-outline-secondary ms-2">Change theme</button>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -42,13 +42,13 @@
       <div class="row g-4 align-items-start">
 
         <div class="col-lg-8">
-          <form id="contact-form" class="form-card p-3 p-sm-4" action="confirmation.html" novalidate>
+          <form id="contact-form" class="form-card p-3 p-sm-4" action="confirmation.html">
             <h2 class="mb-3">Delivery information</h2>
             <div class="row g-3">
 
               <div class="col-12">
                 <label class="form-label" for="name">Your name</label>
-                <input class="form-control" id="name" name="name" type="text" placeholder="For example, Aliya" required>
+                <input class="form-control" id="name" name="name" type="text" placeholder="For example, Aliya" autocomplete="name" minlength="2" maxlength="100" required>
                 <small class="field-error" id="name-error" data-error-for="name" aria-live="polite"></small>
               </div>
 
@@ -56,32 +56,33 @@
                 <label class="form-label" for="email">Email address</label>
                 <div class="input-group">
                   <span class="input-group-text" aria-hidden="true">@</span>
-                  <input class="form-control" id="email" name="email" type="email" placeholder="you@example.com" required>
+                  <input class="form-control" id="email" name="email" type="email" placeholder="you@example.com" autocomplete="email" maxlength="254" required>
                 </div>
                 <small class="field-error" id="email-error" data-error-for="email" aria-live="polite"></small>
               </div>
 
               <div class="col-md-6">
                 <label class="form-label" for="phone">Phone number</label>
-                <input class="form-control" id="phone" name="phone" type="tel" placeholder="+7 777 777 77 77" required>
+                <input class="form-control" id="phone" name="phone" type="tel" placeholder="+7 777 777 77 77" autocomplete="tel" maxlength="30" required>
                 <small class="field-error" id="phone-error" data-error-for="phone" aria-live="polite"></small>
               </div>
 
               <div class="col-12">
                 <label class="form-label" for="address">Delivery address</label>
-                <input class="form-control" id="address" name="address" type="text" placeholder="Street, building, apartment" required>
+                <input class="form-control" id="address" name="address" type="text" placeholder="Street, building, apartment" autocomplete="street-address" minlength="5" maxlength="200" required>
                 <small class="field-error" id="address-error" data-error-for="address" aria-live="polite"></small>
               </div>
 
               <div class="col-md-6">
                 <label class="form-label" for="password">Create password</label>
-                <input class="form-control" id="password" name="password" type="password" minlength="6" autocomplete="new-password" required>
+                <input class="form-control" id="password" name="password" aria-describedby="password-help" type="password" minlength="8" maxlength="128" autocomplete="new-password" required>
+                <small class="form-text d-block" id="password-help">Use 8–128 characters with uppercase and lowercase letters, a number and a special character. Avoid common passwords and repeated patterns.</small>
                 <small class="field-error" id="password-error" data-error-for="password" aria-live="polite"></small>
               </div>
 
               <div class="col-md-6">
                 <label class="form-label" for="confirm-password">Confirm password</label>
-                <input class="form-control" id="confirm-password" name="confirm-password" type="password" minlength="6" autocomplete="new-password" required>
+                <input class="form-control" id="confirm-password" name="confirm-password" type="password" minlength="8" maxlength="128" autocomplete="new-password" required>
                 <small class="field-error" id="confirm-password-error" data-error-for="confirm-password" aria-live="polite"></small>
               </div>
 
@@ -115,7 +116,7 @@
 
               <div class="col-12">
                 <label class="form-label" for="message">Order note</label>
-                <textarea class="form-control" id="message" name="message" placeholder="For example: Please call when you reach the entrance."></textarea>
+                <textarea class="form-control" id="message" name="message" maxlength="1000" placeholder="For example: Please call when you reach the entrance."></textarea>
               </div>
 
               <div class="col-12">
