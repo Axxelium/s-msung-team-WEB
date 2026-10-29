@@ -205,7 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
     checkoutForm.reset();
     window.location.assign('confirmation.html');
   });
-  // Back/forward cache must not restore stale passwords or an already-submitted order.
+
   window.addEventListener('pageshow', (event) => {
     if (!event.persisted) return;
     document.getElementById('password').value = '';
