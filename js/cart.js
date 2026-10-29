@@ -12,7 +12,7 @@
       candidate.removeItem('cafe-mania-storage-check');
       storage = candidate;
       break;
-    } catch (_) {  }
+    } catch (_) { /* Try the next storage option. */ }
   }
 
   app.storage = {
