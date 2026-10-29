@@ -45,17 +45,17 @@ Cafe Mania now has a connected menu → cart → three-step checkout → confirm
 
 ### Where each requirement
 
-| Requirement | Implementation | 
-| --- | --- | --- |
-| Select and modify DOM elements | `js/shop.js`: `productCard`, product grid, cart rows; `js/checkout.js`: summaries | 
-| Manipulating attributes — chosen option: rating stars | `js/confirmation.js`: `renderRating`, `querySelectorAll`, classes and `aria-pressed` | 
-| Click event listeners | `js/shop.js`: add/remove/quantity buttons and category filters | 
-| Keyboard events | `js/site-ui.js`: navigation `keydown` handler | 
-| Callbacks — chosen option: multi-step form | `js/checkout.js`: `changeStep(index, onStepChange)` invokes the `renderStep` callback | 
-| Switch statement | `js/shop.js`: `productsFor(category)` | Filter All, Coffee, Breakfast, Bakery, Lunch and Tea. | 
-| Objects and methods | `js/catalog.js`: product objects; `js/cart.js`: cart object with `add`, `remove`, `setQuantity`, `subtotal`, `total` | 
-| Arrays and loops | `js/catalog.js`: products; `js/shop.js`: `for…of` card/row rendering | 
- 
+| Requirement | Implementation | Notes / Chosen Options |
+| :--- | :--- | :--- |
+| Select and modify DOM elements | `js/shop.js`: `productCard`, product grid, cart rows;<br>`js/checkout.js`: summaries | |
+| Manipulating attributes | `js/confirmation.js`: `renderRating`, `querySelectorAll`, classes and `aria-pressed` | Chosen option: rating stars |
+| Click event listeners | `js/shop.js`: add/remove/quantity buttons and category filters | |
+| Keyboard events | `js/site-ui.js`: navigation `keydown` handler | |
+| Callbacks | `js/checkout.js`: `changeStep(index, onStepChange)` invokes the `renderStep` callback | Chosen option: multi-step form |
+| Switch statement | `js/shop.js`: `productsFor(category)` | Filter All, Coffee, Breakfast, Bakery, Lunch and Tea. |
+| Objects and methods | `js/catalog.js`: product objects;<br>`js/cart.js`: cart object with `add`, `remove`, `setQuantity`, `subtotal`, `total` | |
+| Arrays and loops | `js/catalog.js`: products;<br>`js/shop.js`: `for…of` card/row rendering | |
+
 ## Team
 Aidos, Arnur, Mukhammajon.
 
