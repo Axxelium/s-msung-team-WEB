@@ -26,7 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
     return column;
   }
 
-  // The switch chooses the category; filter is a higher-order function with a predicate.
   function productsFor(category) {
     switch (category) {
       case 'coffee': return app.products.filter((product) => product.category === 'coffee');
