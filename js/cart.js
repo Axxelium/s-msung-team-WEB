@@ -5,7 +5,6 @@
   const orderKey = 'cafe-mania-last-order-v1';
   let storage = null;
 
-  // Prefer persistent storage, then session storage. Neither is essential to render a page.
   for (const name of ['localStorage', 'sessionStorage']) {
     try {
       const candidate = window[name];
@@ -13,7 +12,7 @@
       candidate.removeItem('cafe-mania-storage-check');
       storage = candidate;
       break;
-    } catch (_) { /* Try the next storage option. */ }
+    } catch (_) {  }
   }
 
   app.storage = {
@@ -84,7 +83,6 @@
     total() { return this.subtotal() + this.delivery(); },
     placeOrder() {
       if (!this.items.length) return null;
-      // Only order items and collection method are stored. No contact details or passwords.
       const order = {
         id: `CM-${Date.now().toString(36).toUpperCase()}`,
         createdAt: new Date().toISOString(),
