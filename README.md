@@ -43,19 +43,19 @@ A small responsive cafe website
 ## Assignment 5 — Part 1
 Cafe Mania now has a connected menu → cart → three-step checkout → confirmation flow.
 
-### Where each requirement lives
+### Where each requirement
 
-| Requirement | Implementation |
+| Requirement | Implementation | 
 | --- | --- | --- |
-| Select and modify DOM elements | `js/shop.js`: `productCard`, product grid, cart rows; `js/checkout.js`: summaries |
-| Manipulating attributes — chosen option: rating stars | `js/confirmation.js`: `renderRating`, `querySelectorAll`, classes and `aria-pressed` |
-| Click event listeners | `js/shop.js`: add/remove/quantity buttons and category filters |
-| Keyboard events | `js/site-ui.js`: navigation `keydown` handler |
-| Callbacks — chosen option: multi-step form | `js/checkout.js`: `changeStep(index, onStepChange)` invokes the `renderStep` callback |
-| Switch statement | `js/shop.js`: `productsFor(category)` | Filter All, Coffee, Breakfast, Bakery, Lunch and Tea. |
-| Objects and methods | `js/catalog.js`: product objects; `js/cart.js`: cart object with `add`, `remove`, `setQuantity`, `subtotal`, `total` |
-| Arrays and loops | `js/catalog.js`: products; `js/shop.js`: `for…of` card/row rendering |
-
+| Select and modify DOM elements | `js/shop.js`: `productCard`, product grid, cart rows; `js/checkout.js`: summaries | 
+| Manipulating attributes — chosen option: rating stars | `js/confirmation.js`: `renderRating`, `querySelectorAll`, classes and `aria-pressed` | 
+| Click event listeners | `js/shop.js`: add/remove/quantity buttons and category filters | 
+| Keyboard events | `js/site-ui.js`: navigation `keydown` handler | 
+| Callbacks — chosen option: multi-step form | `js/checkout.js`: `changeStep(index, onStepChange)` invokes the `renderStep` callback | 
+| Switch statement | `js/shop.js`: `productsFor(category)` | Filter All, Coffee, Breakfast, Bakery, Lunch and Tea. | 
+| Objects and methods | `js/catalog.js`: product objects; `js/cart.js`: cart object with `add`, `remove`, `setQuantity`, `subtotal`, `total` | 
+| Arrays and loops | `js/catalog.js`: products; `js/shop.js`: `for…of` card/row rendering | 
+ 
 ## Team
 Aidos, Arnur, Mukhammajon.
 
