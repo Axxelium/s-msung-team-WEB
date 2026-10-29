@@ -1,7 +1,6 @@
 (() => {
   'use strict';
-
-  // One source of truth for names, prices and pictures on every order page.
+  
   const products = [
     { id: 'cappuccino', name: 'Cappuccino', price: 1290, category: 'coffee', image: 'images/Cappucino.jpg', description: 'Double espresso and silky milk foam.' },
     { id: 'morning-set', name: 'Morning Set', price: 2490, category: 'breakfast', image: 'images/cofee.jpg', description: 'Cappuccino, a fresh croissant, and jam.' },
@@ -16,7 +15,6 @@
     products,
     productById: (id) => products.find((product) => product.id === id),
     money: (amount) => `${new Intl.NumberFormat('en-US').format(amount)} ₸`,
-    // Reused for data-driven content; user input is always assigned with textContent.
     element(tag, className, text) {
       const node = document.createElement(tag);
       if (className) node.className = className;
