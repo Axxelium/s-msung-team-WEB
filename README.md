@@ -11,6 +11,17 @@ A small responsive cafe website
 - `responsive.html` — Assignment 3 Part 1 demo (media queries only, no Bootstrap)
 - `confirmation.html` — order confirmation
 
+## JavaScript responsibilities
+
+- `script.js`: existing FAQ accordion, contact popup, toast, theme cycle and clock.
+- `js/catalog.js`: catalog data, money formatting and safe element creation.
+- `js/cart.js`: cart state, calculations, storage validation and demo order snapshot.
+- `js/site-ui.js`: badges, keyboard navigation, sound preference and modal focus handling.
+- `js/shop.js`: menu/favorites rendering, filters and cart controls.
+- `js/checkout.js`: field validation, callbacks, step state and order review.
+- `js/confirmation.js`: actual order summary and local rating.
+
+
 ## Assignment 2 (Flexbox & Grid) — where each task lives
 - **Task 1, Flexbox navbar:** `#main-header .topbar` on every page (logo left, links right).
 - **Task 2, Flexbox card row:** `.card-grid` on `index.html` — equal-height cards with a lift/shadow hover effect.
