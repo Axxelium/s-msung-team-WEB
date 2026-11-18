@@ -93,7 +93,9 @@
                   </div>
 
                   <div class="d-flex justify-content-between align-items-center mb-4 small">
-                    <span class="text-muted">Demo: <code>aliya@cafemania.kz</code> / <code>Password123!</code></span>
+                    <button type="button" class="btn btn-sm btn-outline-secondary py-1 px-2 border-0 bg-light text-muted d-flex align-items-center gap-1 rounded-pill" id="btnFillDemo" title="Click to fill demo account details" style="cursor: pointer;">
+                      <span>⚡ Auto-fill demo:</span> <code class="text-primary fw-bold">aliya@cafemania.kz</code>
+                    </button>
                   </div>
 
                   <button class="btn btn-primary w-100 py-2 fw-bold" type="submit" id="loginSubmitBtn">
@@ -194,6 +196,19 @@
 
       CafeValidation.bindField(loginEmail, val => CafeValidation.validateEmail(val));
       CafeValidation.bindField(loginPassword, val => CafeValidation.validateRequired(val, 'Password'));
+
+      const btnFillDemo = document.getElementById('btnFillDemo');
+      if (btnFillDemo) {
+        btnFillDemo.addEventListener('click', () => {
+          loginEmail.value = 'aliya@cafemania.kz';
+          loginPassword.value = 'Password123!';
+          CafeValidation.clearError(loginEmail);
+          CafeValidation.clearError(loginPassword);
+          loginEmail.classList.add('is-valid');
+          loginPassword.classList.add('is-valid');
+          loginSubmitBtn.focus();
+        });
+      }
 
       loginForm.addEventListener('submit', (e) => {
         e.preventDefault();

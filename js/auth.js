@@ -21,7 +21,7 @@
       password: 'Password123!',
       registeredAt: '2026-09-15',
       beansBalance: 450,
-      favoriteDrink: 'Vanilla Raf',
+      favoriteDrink: 'Cappuccino',
       ordersCount: 7
     }
   ];
@@ -33,7 +33,12 @@
         localStorage.setItem(USERS_KEY, JSON.stringify(defaultUsers));
         return defaultUsers;
       }
-      return JSON.parse(stored);
+      const parsed = JSON.parse(stored);
+      // Clean up any legacy 'Vanilla Raf' reference
+      parsed.forEach(u => {
+        if (u.favoriteDrink === 'Vanilla Raf') u.favoriteDrink = 'Cappuccino';
+      });
+      return parsed;
     } catch (_) {
       return defaultUsers;
     }
@@ -50,7 +55,13 @@
   function getCurrentUser() {
     try {
       const stored = localStorage.getItem(CURRENT_USER_KEY);
-      return stored ? JSON.parse(stored) : null;
+      if (!stored) return null;
+      const user = JSON.parse(stored);
+      if (user && user.favoriteDrink === 'Vanilla Raf') {
+        user.favoriteDrink = 'Cappuccino';
+        localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
+      }
+      return user;
     } catch (_) {
       return null;
     }

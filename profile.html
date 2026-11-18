@@ -94,7 +94,7 @@
 
           <!-- Stored User Details Card -->
           <div class="card border-0 rounded-4 shadow-sm p-4 mb-4">
-            <h3 class="h5 fw-bold mb-3 border-bottom pb-2">Stored Profile Details (localStorage)</h3>
+            <h3 class="h5 fw-bold mb-3 border-bottom pb-2">Profile Details</h3>
             <dl class="row mb-0 small">
               <dt class="col-sm-4 text-muted">Full Name:</dt>
               <dd class="col-sm-8 fw-bold" id="detailName">—</dd>
@@ -106,16 +106,16 @@
               <dd class="col-sm-8" id="detailPhone">—</dd>
 
               <dt class="col-sm-4 text-muted">Favorite:</dt>
-              <dd class="col-sm-8 text-primary fw-bold" id="detailFavorite">Vanilla Raf</dd>
+              <dd class="col-sm-8 text-primary fw-bold" id="detailFavorite">Cappuccino</dd>
 
               <dt class="col-sm-4 text-muted">Total Orders:</dt>
-              <dd class="col-sm-8" id="detailOrders">3 orders</dd>
+              <dd class="col-sm-8" id="detailOrders">0 orders</dd>
             </dl>
           </div>
 
           <!-- Quick Update Profile Form (with pure JS validation) -->
           <div class="card border-0 rounded-4 shadow-sm p-4">
-            <h3 class="h5 fw-bold mb-2">Update Phone or Name</h3>
+            <h3 class="h5 fw-bold mb-2">Update Profile</h3>
             <p class="text-muted small mb-3">Changes are instantly stored in your browser's localStorage.</p>
             <form id="updateProfileForm" novalidate>
               <div class="mb-3">
@@ -127,6 +127,18 @@
                 <label class="form-label small fw-bold" for="editPhone">Phone</label>
                 <input class="form-control form-control-sm" id="editPhone" name="phone" type="text" inputmode="tel">
                 <small class="field-error text-danger d-block mt-1" id="editPhone-error" data-error-for="editPhone" aria-live="polite"></small>
+              </div>
+              <div class="mb-3">
+                <label class="form-label small fw-bold" for="editFavorite">Favorite Menu Item</label>
+                <select class="form-select form-select-sm" id="editFavorite" name="favorite">
+                  <option value="Cappuccino">Cappuccino (Coffee)</option>
+                  <option value="Morning Set">Morning Set (Breakfast)</option>
+                  <option value="Mania Brunch">Mania Brunch (Breakfast)</option>
+                  <option value="Berry Puff">Berry Puff (Bakery)</option>
+                  <option value="Lunch Set">Lunch Set (Lunch)</option>
+                  <option value="Sea-Buckthorn Tea">Sea-Buckthorn Tea (Tea)</option>
+                  <option value="Dessert of the Day">Dessert of the Day (Bakery)</option>
+                </select>
               </div>
               <button class="btn btn-primary btn-sm w-100 fw-bold" type="submit">Save Changes</button>
             </form>
@@ -203,9 +215,17 @@
         <p class="mt-1 mb-0 small">Astana, Kazakhstan · your daily portion of comfort</p>
         <p class="mt-1 mb-0 small">Team: Aidos, Arnur, Mukhammajon</p>
       </div>
-      <div>
-        <a class="btn btn-sm btn-outline-secondary" href="menu.html">Menu</a>
-        <a class="btn btn-sm btn-outline-secondary ms-2" href="cart.html">Cart</a>
+      <div class="d-flex flex-column align-items-md-end gap-2">
+        <div class="d-flex align-items-center gap-2">
+          <button class="btn btn-outline-primary btn-sm" type="button" data-sound-toggle aria-pressed="true">Sound on</button>
+          <a class="btn btn-sm btn-outline-secondary" href="menu.html">Menu</a>
+          <a class="btn btn-sm btn-outline-secondary" href="cart.html">Cart</a>
+        </div>
+        <div class="socials d-flex gap-2">
+          <a href="#" aria-label="Instagram" title="Instagram">IG</a>
+          <a href="#" aria-label="Telegram" title="Telegram">TG</a>
+          <a href="#" aria-label="Facebook" title="Facebook">FB</a>
+        </div>
       </div>
     </div>
   </footer>
@@ -238,7 +258,7 @@
       document.getElementById('detailName').textContent = currentUser.name;
       document.getElementById('detailEmail').textContent = currentUser.email;
       document.getElementById('detailPhone').textContent = currentUser.phone || 'Not specified';
-      document.getElementById('detailFavorite').textContent = currentUser.favoriteDrink || 'Vanilla Raf';
+      document.getElementById('detailFavorite').textContent = currentUser.favoriteDrink || 'Cappuccino';
 
       // Load orders history from localStorage
       const ordersTableBody = document.getElementById('ordersTableBody');
@@ -278,16 +298,22 @@
           `;
           ordersTableBody.appendChild(tr);
         });
-        document.getElementById('detailOrders').textContent = `${ordersHistory.length} orders`;
+        const count = ordersHistory.length;
+        document.getElementById('detailOrders').textContent = `${count} ${count === 1 ? 'order' : 'orders'}`;
       } else {
-        document.getElementById('detailOrders').textContent = `${currentUser.ordersCount || 0} orders`;
+        const count = currentUser.ordersCount || 0;
+        document.getElementById('detailOrders').textContent = `${count} ${count === 1 ? 'order' : 'orders'}`;
       }
 
       // Set form inputs for editing
       const editName = document.getElementById('editName');
       const editPhone = document.getElementById('editPhone');
+      const editFavorite = document.getElementById('editFavorite');
       editName.value = currentUser.name;
       editPhone.value = currentUser.phone || '';
+      if (editFavorite) {
+        editFavorite.value = currentUser.favoriteDrink || 'Cappuccino';
+      }
 
       // Bind validation to update form
       CafeValidation.bindField(editName, val => CafeValidation.validateRequired(val, 'Name'));
@@ -308,6 +334,9 @@
 
         currentUser.name = editName.value.trim();
         currentUser.phone = editPhone.value.trim();
+        if (editFavorite) {
+          currentUser.favoriteDrink = editFavorite.value;
+        }
         CafeAuth.setCurrentUser(currentUser);
 
         // Also update stored users list
@@ -316,6 +345,7 @@
         if (idx >= 0) {
           users[idx].name = currentUser.name;
           users[idx].phone = currentUser.phone;
+          users[idx].favoriteDrink = currentUser.favoriteDrink;
           try { localStorage.setItem('cafe-mania-users', JSON.stringify(users)); } catch (_) {}
         }
 
@@ -328,6 +358,7 @@
         document.getElementById('cardUserName').textContent = currentUser.name;
         document.getElementById('detailName').textContent = currentUser.name;
         document.getElementById('detailPhone').textContent = currentUser.phone;
+        document.getElementById('detailFavorite').textContent = currentUser.favoriteDrink;
         CafeAuth.updateNavbar();
       });
 
@@ -338,48 +369,87 @@
 
       // Render Favorites from localStorage
       const favoritesList = document.getElementById('favoritesList');
-      let favorites = [];
-      try {
-        const stored = localStorage.getItem('cafe-mania-favorites');
-        favorites = stored ? JSON.parse(stored) : [];
-      } catch (_) {}
+      function renderFavorites() {
+        let favorites = [];
+        try {
+          const stored = localStorage.getItem('cafe-mania-favorites');
+          favorites = stored ? JSON.parse(stored) : [];
+        } catch (_) {}
 
-      if (favorites.length === 0) {
-        // Add sample starter favorites
-        favorites = [
-          { title: 'Spanish Latte (Cortado)', description: 'Espresso with warm and condensed milk.', ingredients: ['Espresso', 'Condensed milk'] },
-          { title: 'Flat White', description: 'Double espresso topped with micro-foamed milk.', ingredients: ['Double Espresso', 'Steamed Milk'] }
-        ];
-        try { localStorage.setItem('cafe-mania-favorites', JSON.stringify(favorites)); } catch (_) {}
-      }
-
-      favoritesList.innerHTML = '';
-      favorites.forEach((fav, i) => {
-        const card = document.createElement('div');
-        card.className = 'col-md-6';
-        card.innerHTML = `
-          <div class="border rounded-3 p-3 h-100 bg-body d-flex flex-column justify-content-between">
-            <div>
-              <div class="d-flex justify-content-between align-items-start">
-                <h4 class="h6 fw-bold mb-1">${fav.title}</h4>
-                <button class="btn btn-sm btn-link text-danger p-0 btn-remove-fav" data-index="${i}" title="Remove">✕</button>
-              </div>
-              <p class="text-muted small mb-2">${fav.description || 'Specialty cafe recipe.'}</p>
+        favoritesList.innerHTML = '';
+        if (favorites.length === 0) {
+          favoritesList.innerHTML = `
+            <div class="col-12 text-center py-4 text-muted">
+              <div class="fs-1 mb-2">☕</div>
+              <h4 class="h6 fw-bold mb-1">No favorite drinks saved yet</h4>
+              <p class="small text-muted mb-3">Click the ❤️ button on any drink in our Menu to save it here!</p>
+              <a href="menu.html" class="btn btn-outline-primary btn-sm rounded-pill px-3">Explore Menu →</a>
             </div>
-            <a href="menu.html" class="btn btn-outline-primary btn-sm mt-2">Order Similar</a>
-          </div>
-        `;
-        favoritesList.appendChild(card);
-      });
+          `;
+          return;
+        }
 
-      favoritesList.querySelectorAll('.btn-remove-fav').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const idx = Number(btn.getAttribute('data-index'));
-          favorites.splice(idx, 1);
-          try { localStorage.setItem('cafe-mania-favorites', JSON.stringify(favorites)); } catch (_) {}
-          window.location.reload();
+        favorites.forEach((fav, i) => {
+          const card = document.createElement('div');
+          card.className = 'col-md-6 fav-card-item';
+          card.id = `fav-card-${i}`;
+          card.innerHTML = `
+            <div class="border rounded-3 p-3 h-100 bg-body d-flex flex-column justify-content-between position-relative shadow-sm">
+              <div>
+                <div class="d-flex justify-content-between align-items-start gap-2">
+                  <h4 class="h6 fw-bold mb-1 text-truncate" title="${fav.title}">${fav.title}</h4>
+                  <button class="btn btn-sm btn-outline-secondary rounded-circle d-flex align-items-center justify-content-center p-0 btn-remove-fav" style="width: 24px; height: 24px; font-size: 11px; flex-shrink: 0;" data-index="${i}" title="Remove from favorites" aria-label="Remove ${fav.title} from favorites">✕</button>
+                </div>
+                <p class="text-muted small mb-2">${fav.description || 'Specialty cafe recipe.'}</p>
+              </div>
+              <div class="d-flex gap-2 mt-2">
+                <button type="button" class="btn btn-outline-primary btn-sm w-100 btn-order-fav" data-title="${fav.title}" data-id="${fav.id || ''}">+ Add to Cart</button>
+              </div>
+            </div>
+          `;
+          favoritesList.appendChild(card);
         });
-      });
+
+        favoritesList.querySelectorAll('.btn-remove-fav').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const idx = Number(btn.getAttribute('data-index'));
+            const targetCard = document.getElementById(`fav-card-${idx}`);
+            if (targetCard) {
+              targetCard.style.transition = 'all 0.25s ease';
+              targetCard.style.opacity = '0';
+              targetCard.style.transform = 'scale(0.9)';
+            }
+            setTimeout(() => {
+              let favs = [];
+              try { favs = JSON.parse(localStorage.getItem('cafe-mania-favorites') || '[]'); } catch (_) {}
+              favs.splice(idx, 1);
+              try { localStorage.setItem('cafe-mania-favorites', JSON.stringify(favs)); } catch (_) {}
+              renderFavorites();
+              if (window.CafeMania && typeof window.CafeMania.showToast === 'function') {
+                window.CafeMania.showToast('Item removed from favorites');
+              }
+            }, 200);
+          });
+        });
+
+        favoritesList.querySelectorAll('.btn-order-fav').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const title = btn.getAttribute('data-title');
+            const id = btn.getAttribute('data-id');
+            const products = (window.CafeMania && window.CafeMania.products) ? window.CafeMania.products : [];
+            const match = products.find(p => p.id === id || p.name.toLowerCase() === title.toLowerCase() || title.toLowerCase().includes(p.name.toLowerCase()));
+            if (match && window.CafeMania.cart) {
+              window.CafeMania.cart.add(match.id, 1);
+              if (window.CafeMania.playAddSound) window.CafeMania.playAddSound();
+              if (window.CafeMania.animateBadge) window.CafeMania.animateBadge();
+              if (window.CafeMania.showToast) window.CafeMania.showToast(`Added ${match.name} to cart! ☕`);
+            } else {
+              window.location.href = 'menu.html';
+            }
+          });
+        });
+      }
+      renderFavorites();
     });
   </script>
 </body>
