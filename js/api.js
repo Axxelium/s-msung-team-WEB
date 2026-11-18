@@ -5,6 +5,8 @@
  * - Uses async/await with fetch()
  * - Visual loading state (skeleton / spinner)
  * - Complete error handling with retry functionality and offline fallback
+ * - Filters out common menu drinks (e.g. basic Black Coffee, Latte, Cappuccino)
+ *   so that ONLY unique, iconic, and specialty coffee recipes are displayed!
  * - Integrated with localStorage for saving favorites (Requirement 5.3)
  */
 
@@ -14,49 +16,114 @@
   const API_BASE = 'https://api.sampleapis.com/coffee';
   const FAVORITES_KEY = 'cafe-mania-favorites';
 
-  // Offline curated backup items in case API is unreachable or offline
-  const fallbackCoffeeList = [
+  // Common standard drinks that already exist in standard coffee shop menus
+  const standardDrinkNames = [
+    'black coffee',
+    'latte',
+    'cappuccino',
+    'espresso',
+    'caramel latte',
+    'americano',
+    'iced coffee',
+    'iced latte'
+  ];
+
+  function isUniqueSpecialty(item) {
+    if (!item || !item.title) return false;
+    const lower = item.title.toLowerCase().trim();
+    if (standardDrinkNames.includes(lower)) return false;
+    if (lower === 'latte' || lower === 'caramel latte') return false;
+    return true;
+  }
+
+  // Curated iconic and specialty coffee recipes for hot & iced selections
+  const iconicHotSpecials = [
     {
-      id: 101,
-      title: 'Black Coffee',
-      description: 'It doesn’t get much more standard than black coffee: just brewed beans in a cup. A pure classic for genuine coffee lovers.',
-      ingredients: ['Freshly Ground Beans', 'Filtered Water'],
-      image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&auto=format&fit=crop&q=80'
-    },
-    {
-      id: 102,
-      title: 'Flat White',
-      description: 'Born in Australia and New Zealand, the flat white is a double espresso topped with silky, micro-foamed steamed milk.',
-      ingredients: ['Double Espresso', 'Steamed Microfoam Milk'],
-      image: 'https://images.unsplash.com/photo-1577968897966-3d4325b36b61?w=600&auto=format&fit=crop&q=80'
-    },
-    {
-      id: 103,
-      title: 'Spanish Latte (Cortado)',
-      description: 'A rich espresso drink balanced with an equal amount of warm milk and sweetened condensed milk.',
-      ingredients: ['Espresso', 'Warm Milk', 'Condensed Milk'],
+      id: 201,
+      title: 'Spanish Cortado',
+      description: 'An iconic Spanish bar classic: equal parts intense double espresso and silky warm milk, cut with a sweet ribbon of condensed milk.',
+      ingredients: ['Double Espresso', 'Steamed Whole Milk', 'Sweet Condensed Milk'],
       image: 'https://images.unsplash.com/photo-1534778101976-62847782c213?w=600&auto=format&fit=crop&q=80'
     },
     {
-      id: 104,
-      title: 'Iced Caramel Macchiato',
-      description: 'Chilled milk marked with rich espresso, vanilla syrup, and a drizzle of buttery caramel over ice cubes.',
-      ingredients: ['Espresso', 'Cold Whole Milk', 'Vanilla Syrup', 'Caramel Drizzle', 'Ice'],
-      image: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=600&auto=format&fit=crop&q=80'
+      id: 202,
+      title: 'Flat White',
+      description: 'Born in Wellington and Melbourne: a double ristretto espresso crowned with velvety, glossy microfoam for maximum coffee aroma.',
+      ingredients: ['Double Ristretto', 'Silky Microfoam Milk'],
+      image: 'https://images.unsplash.com/photo-1577968897966-3d4325b36b61?w=600&auto=format&fit=crop&q=80'
     },
     {
-      id: 105,
-      title: 'Affogato',
-      description: 'A delightfully decadent Italian treat made by pouring a hot shot of espresso directly over creamy vanilla gelato.',
-      ingredients: ['Hot Espresso', 'Vanilla Gelato / Ice Cream'],
+      id: 203,
+      title: 'Affogato al Caffè',
+      description: 'A decadent Italian classic: a piping hot shot of freshly extracted espresso poured directly over artisan vanilla bean gelato.',
+      ingredients: ['Fresh Hot Espresso', 'Artisan Vanilla Gelato'],
       image: 'https://images.unsplash.com/photo-1582293041079-7814c2f12063?w=600&auto=format&fit=crop&q=80'
     },
     {
-      id: 106,
-      title: 'Vienna Coffee',
-      description: 'Two shots of espresso infused with whipped cream replacing milk and sugar, dusted with dark chocolate.',
-      ingredients: ['Double Espresso', 'Whipped Cream', 'Cocoa Powder'],
+      id: 204,
+      title: 'Vienna Coffee (Einspänner)',
+      description: 'Traditional Austrian coachman brew: rich double espresso served under a thick blanket of whipped cream and dusted with raw cocoa.',
+      ingredients: ['Double Espresso', 'Whipped Cream', 'Dark Cocoa Powder'],
       image: 'https://images.unsplash.com/photo-1541167760496-1628856ab772?w=600&auto=format&fit=crop&q=80'
+    },
+    {
+      id: 205,
+      title: 'Café de Olla',
+      description: 'Traditional Mexican earthen clay pot coffee brewed with coarse ground beans, Ceylon cinnamon sticks, whole cloves, and dark piloncillo sugar.',
+      ingredients: ['Coarse Coffee', 'Ceylon Cinnamon', 'Raw Piloncillo', 'Cloves'],
+      image: 'https://images.unsplash.com/photo-1511920170033-f8396924c348?w=600&auto=format&fit=crop&q=80'
+    },
+    {
+      id: 206,
+      title: 'Irish Specialty Coffee',
+      description: 'Full-bodied dark roast coffee sweetened with raw demerara sugar and topped with a cold, gently whipped heavy cream float.',
+      ingredients: ['Dark Roast Coffee', 'Demerara Sugar', 'Whipped Cream Float'],
+      image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&auto=format&fit=crop&q=80'
+    }
+  ];
+
+  const iconicIcedSpecials = [
+    {
+      id: 301,
+      title: 'Mazagran (Portuguese Lemon Coffee)',
+      description: 'The world’s original 1840 iced coffee: concentrated cold espresso shaken vigorously with freshly squeezed lemon juice, mint, and ice.',
+      ingredients: ['Espresso Shot', 'Fresh Lemon Juice', 'Cane Sugar', 'Mint', 'Crushed Ice'],
+      image: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=600&auto=format&fit=crop&q=80'
+    },
+    {
+      id: 302,
+      title: 'Nitro Cold Brew',
+      description: 'Slow-steeped for 20 hours and infused with food-grade nitrogen gas, delivering a creamy Guinness-like cascade and velvety foam head.',
+      ingredients: ['20-Hour Cold Brew', 'Nitrogen Microbubbles'],
+      image: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600&auto=format&fit=crop&q=80'
+    },
+    {
+      id: 303,
+      title: 'Espresso Tonic (Bumble)',
+      description: 'Chilled botanical tonic water poured over crystal ice and topped with a double shot of bright Ethiopian espresso and fresh orange peel.',
+      ingredients: ['Double Espresso', 'Botanical Tonic', 'Orange Zest', 'Ice'],
+      image: 'https://images.unsplash.com/photo-1551030173-122aabc4489c?w=600&auto=format&fit=crop&q=80'
+    },
+    {
+      id: 304,
+      title: 'Iced Vietnamese Egg Coffee',
+      description: 'Intense slow-drip dark roast coffee poured over ice and crowned with a luscious custard cream whipped from fresh egg yolks and condensed milk.',
+      ingredients: ['Robusta Drip Coffee', 'Whipped Egg Yolk', 'Condensed Milk', 'Ice'],
+      image: 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=600&auto=format&fit=crop&q=80'
+    },
+    {
+      id: 305,
+      title: 'Kyoto Slow Drip',
+      description: 'Artisan cold extraction: chilled water drops bead-by-bead through specialty single-origin grounds over 12 hours, capturing delicate fruity notes.',
+      ingredients: ['Single-Origin Beans', 'Cold Filtered Drops'],
+      image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&auto=format&fit=crop&q=80'
+    },
+    {
+      id: 306,
+      title: 'Iced Pistachio Raf',
+      description: 'Signature cold brew espresso steamed directly with light cream, natural roasted pistachio butter, and Madagascar vanilla over ice.',
+      ingredients: ['Espresso', 'Light Cream', 'Pistachio Paste', 'Vanilla', 'Ice'],
+      image: 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=600&auto=format&fit=crop&q=80'
     }
   ];
 
@@ -102,16 +169,19 @@
     },
 
     /**
-     * Fetches coffee recipes dynamically using fetch() and async/await
+     * Fetches coffee recipes dynamically using fetch() and async/await,
+     * filtering out common standard drinks already present in the cafe menu.
      */
     async fetchCoffees(type = 'hot') {
       this.currentType = type;
+      const fallbackList = type === 'iced' ? iconicIcedSpecials : iconicHotSpecials;
+
       if (this.coffeeCache[type]) {
         return { data: this.coffeeCache[type], fromCache: true };
       }
 
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 6000); // 6s timeout
+      const timeoutId = setTimeout(() => controller.abort(), 6000);
 
       try {
         const response = await fetch(`${API_BASE}/${type}`, {
@@ -121,18 +191,38 @@
         clearTimeout(timeoutId);
 
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          throw new Error(`HTTP status: ${response.status}`);
         }
 
         const data = await response.json();
-        const validList = Array.isArray(data) && data.length > 0 ? data : fallbackCoffeeList;
-        this.coffeeCache[type] = validList;
-        return { data: validList, fromCache: false };
+        if (Array.isArray(data) && data.length > 0) {
+          // Filter out standard common coffee drinks (Black coffee, plain Latte, Cappuccino, etc.)
+          const uniqueApiItems = data.filter(item => isUniqueSpecialty(item));
+          
+          // Combine unique items from API with iconic recipes to ensure high quality presentation
+          const combined = [];
+          const seen = new Set();
+          
+          [...uniqueApiItems, ...fallbackList].forEach(item => {
+            const key = item.title.toLowerCase().trim();
+            if (!seen.has(key) && isUniqueSpecialty(item)) {
+              seen.add(key);
+              combined.push(item);
+            }
+          });
+
+          const finalList = combined.slice(0, 6);
+          this.coffeeCache[type] = finalList;
+          return { data: finalList, fromCache: false };
+        }
+
+        this.coffeeCache[type] = fallbackList;
+        return { data: fallbackList, fromCache: false };
       } catch (err) {
         clearTimeout(timeoutId);
-        console.warn('SampleAPIs Coffee request failed, using curated fallback.', err);
-        // Return fallback data with an error notice flag
-        return { data: fallbackCoffeeList, isFallback: true, error: err.message };
+        // Use iconic specialty collection when offline or network fails
+        this.coffeeCache[type] = fallbackList;
+        return { data: fallbackList, isFallback: true, error: err.message };
       }
     },
 
@@ -147,12 +237,9 @@
         <div class="api-explorer-section p-4 rounded-4 shadow-sm">
           <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
             <div>
-              <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold text-uppercase mb-2">
-                ⚡ Live REST API
-              </span>
               <h2 class="h3 fw-bold mb-1">World Specialty Coffee Discovery</h2>
               <p class="text-muted mb-0 small">
-                Live coffee recipes fetched from <code>api.sampleapis.com/coffee</code>. Discover how cultures around the globe brew coffee.
+                Unique and iconic brewing traditions from around the globe.
               </p>
             </div>
             <div class="d-flex align-items-center gap-2">
@@ -173,14 +260,10 @@
             <p class="mt-3 text-muted fw-bold">Connecting to global coffee database...</p>
           </div>
 
-          <div id="api-error-state" class="alert alert-warning p-4 rounded-3 d-none" role="alert">
-            <div class="d-flex align-items-center gap-3">
-              <span style="font-size: 2rem;">☕</span>
-              <div class="flex-grow-1">
-                <h5 class="alert-heading fw-bold mb-1">Notice: Live Network Service Unavailable</h5>
-                <p class="mb-2 small" id="api-error-message">Could not connect to external host. Showing our offline curated specialty recipes.</p>
-                <button class="btn btn-sm btn-outline-dark" id="btn-retry-api">↻ Try Live Reconnect</button>
-              </div>
+          <div id="api-error-state" class="alert alert-warning p-3 rounded-3 d-none" role="alert">
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="small" id="api-error-message">Showing curated global specialty recipes.</span>
+              <button class="btn btn-sm btn-outline-dark" id="btn-retry-api">↻ Reconnect</button>
             </div>
           </div>
 
@@ -278,7 +361,7 @@
 
         if (result.isFallback) {
           errorBox.classList.remove('d-none');
-          errorMsg.textContent = `External API note (${result.error || 'Network offline'}). Showing curated recipes.`;
+          errorMsg.textContent = `Showing curated iconic recipes (${result.error || 'offline mode'}).`;
         }
 
         renderGrid(result.data);
