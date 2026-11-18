@@ -1,9 +1,7 @@
 /**
- * Cafe Mania - Authentication Simulation Module
- * Strictly fulfills Requirement 5.1:
- * - "Sign Up" stores user data locally in localStorage (name, email, phone, password).
- * - "Log In" verifies credentials against localStorage and redirects to profile.html.
- * - Profile page displays stored user details, loyalty status, saved favorites, and past orders.
+ * Cafe Mania - Authentication Module
+ * Manages local user registration, login verification,
+ * and user profile state stored in browser storage.
  */
 
 (function (window) {

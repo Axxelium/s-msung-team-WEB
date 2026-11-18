@@ -1,9 +1,7 @@
 /**
- * Cafe Mania - Form Validation Module (Pure JavaScript)
- * Strictly fulfills Requirement 5.2:
- * - NO HTML validation attributes used (no required, pattern, minlength, maxlength, min, max, type="email")
- * - Validates: Email format, Password length & complexity, Required fields, Phone number pattern
- * - Displays user-friendly error messages on the page under each field
+ * Cafe Mania - Client-Side Form Validation Module
+ * Reusable validation rules for email, password complexity,
+ * phone formatting, and required field inputs.
  */
 
 (function (window) {

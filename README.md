@@ -8,17 +8,18 @@ A multi-page responsive web platform for a modern specialty coffee shop in Astan
 
 ---
 
-## ☕ Connected Pages (9 functional pages)
+## ☕ Connected Pages (10 functional pages)
 
 1. `index.html` — Home page with hero, live clock, animated counters, guest favorites, FAQ accordion, clipboard copy, and contact modal.
 2. `menu.html` — Full coffee & food menu with category filtering, live autocomplete search, and **Live World Specialty Coffee REST API Explorer**.
 3. `about.html` — Our story, barista team profiles, atmosphere photo gallery, and kitchen hours.
-4. `cart.html` — Interactive shopping cart with live calculations, promo code, and collection method selection.
-5. `checkout.html` — 3-step checkout form with pure JavaScript validation and auto-fill for logged-in members.
-6. `confirmation.html` — Order confirmation with summary, dynamic order tracking status, and interactive 5-star rating.
-7. `login.html` — Authentication simulation with dual tabs for **Log In** and **Sign Up** using pure JS validation and `localStorage`.
-8. `profile.html` — User Profile with stored details, digital "Gold Bean Club" loyalty card, saved favorite coffees, order history, and logout.
-9. `responsive.html` — Media Queries and responsive typography demonstration page.
+4. `contact.html` — Dedicated contact page with location details, opening hours, and client-side validated inquiry form.
+5. `cart.html` — Interactive shopping cart with live calculations, promo code, and collection method selection.
+6. `checkout.html` — 3-step checkout form with pure JavaScript validation, loyalty beans discount toggle, and auto-fill for logged-in members.
+7. `confirmation.html` — Order confirmation with summary, dynamic order tracking status, and interactive 5-star rating.
+8. `login.html` — Authentication simulation with dual tabs for **Log In** and **Sign Up** using pure JS validation and `localStorage`.
+9. `profile.html` — User Profile with stored details, digital "Gold Bean Club" loyalty card, saved favorite coffees, dynamic order history, and logout.
+10. `responsive.html` — Media Queries and responsive typography demonstration page.
 
 ---
 
@@ -30,6 +31,7 @@ s-msung-team-WEB-main/
 ├── index.html              # Home page
 ├── menu.html               # Menu & Live Coffee API
 ├── about.html              # About & Team
+├── contact.html            # Contact Page & Form
 ├── cart.html               # Shopping Cart
 ├── checkout.html           # 3-Step Checkout Form
 ├── confirmation.html       # Order Confirmation & Rating

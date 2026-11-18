@@ -944,7 +944,7 @@ body.dark-theme #themeToggle { --bs-btn-color: var(--ink); --bs-btn-border-color
 .copy-menu-link { min-width: min(100%, 19rem); }
 @media (prefers-reduced-motion: reduce) { .scroll-progress__fill { transition: none; } }
 
-/* Requirement 6: Enhanced Interactive Buttons & Animated Micro-interactions */
+/* Interactive Button & Animation Effects */
 .btn {
     transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s ease, background-color 0.2s ease, color 0.2s ease;
 }
@@ -988,7 +988,7 @@ body.dark-theme .btn-auth-login {
     color: #efb5ac;
 }
 
-/* Requirement 7: World Specialty Coffee API Section */
+/* World Specialty Coffee API Section */
 .api-explorer-section {
     background: var(--sand);
     border: 1px solid var(--line);
@@ -1002,7 +1002,7 @@ body.dark-theme .api-explorer-section code {
     color: #efb5ac;
 }
 
-/* Requirement 5.2: Field error shake animation */
+/* Form validation error animations */
 .field-error {
     font-size: 0.82rem;
     animation: field-error-enter 0.25s ease;
@@ -1012,7 +1012,7 @@ body.dark-theme .api-explorer-section code {
     100% { opacity: 1; transform: translateY(0); }
 }
 
-/* Requirement 3: Smooth Theme Switching Transitions */
+/* Theme Switching Transitions */
 body, #main-header, footer, .card, .page, .summary, .form-card {
     transition: background-color 0.28s ease, color 0.28s ease, border-color 0.28s ease;
 }

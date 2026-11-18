@@ -1,10 +1,9 @@
 /**
  * Cafe Mania - Checkout Form Logic
- * Fulfills Requirement 5.2:
- * - Pure JavaScript validation without HTML validation attributes
- * - Validates: Email format, Account Password verification, Required fields, Phone number pattern
- * - Integrates Cafe Mania Club loyalty bonus beans toggle & live discount calculation
- * - Deducts used beans, awards +5% new beans on purchase, and updates user profile
+ * - Pure JavaScript form validation
+ * - Account password verification
+ * - Loyalty bonus beans toggle & live discount calculation
+ * - Multi-step checkout workflow
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -88,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   /**
-   * Pure JavaScript validation message generator (strictly fulfilling Requirement 5.2)
+   * Field validation message generator
    */
   const messageFor = (field) => {
     if (field.disabled) return '';

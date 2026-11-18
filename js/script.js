@@ -1,9 +1,6 @@
 /**
  * Cafe Mania - Main Application Script
- * Fulfills Requirements:
- * - 3. Light and Dark Modes: clean toggle switch with localStorage persistence and proper contrast.
- * - 5.2. Form Validation: pure JS validation without HTML validation attributes for contact modal.
- * - 6. Interactive UI effects (accordion, modals, toast, clock).
+ * Theme switcher, interactive UI components, modals, and notifications.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -82,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (event.key === 'Escape') closeModal();
   });
 
-  // Contact form submission with Pure JS Validation (Requirement 5.2)
+  // Contact form submission with client-side validation
   const contactForm = modal?.querySelector('form');
   if (contactForm) {
     contactForm.setAttribute('novalidate', 'true');

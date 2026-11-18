@@ -1,13 +1,10 @@
 /**
  * Cafe Mania - External Coffee API Integration Module
- * Strictly fulfills Requirement 7:
- * - Integrates public SampleAPIs Coffee API (https://api.sampleapis.com/coffee/hot & /iced)
- * - Uses async/await with fetch()
- * - Visual loading state (skeleton / spinner)
- * - Complete error handling with retry functionality and offline fallback
- * - Filters out common menu drinks (e.g. basic Black Coffee, Latte, Cappuccino)
- *   so that ONLY unique, iconic, and specialty coffee recipes are displayed!
- * - Integrated with localStorage for saving favorites (Requirement 5.3)
+ * Fetches world coffee recipes using public SampleAPIs Coffee API
+ * Features:
+ * - Async/await fetch with loading state and offline fallback
+ * - Specialty recipe discovery & curation
+ * - LocalStorage integration for favorites
  */
 
 (function (window) {

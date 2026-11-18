@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cafe Mania - Contact Us</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <script>
+    (function () {
+      const theme = localStorage.getItem('cafe-mania-theme');
+      const themes = ['light', 'dark', 'green', 'blue', 'red'];
+      if (themes.includes(theme)) {
+        document.documentElement.setAttribute('data-bs-theme', theme === 'dark' ? 'dark' : 'light');
+        const applyEarly = () => {
+          themes.forEach(t => document.body.classList.toggle(`${t}-theme`, t === theme));
+          document.body.dataset.theme = theme;
+        };
+        document.body ? applyEarly() : document.addEventListener('DOMContentLoaded', applyEarly);
+      }
+    })();
+  </script>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+
+  <header id="main-header" class="py-3">
+    <nav class="navbar navbar-expand-md p-0" aria-label="Main navigation">
+      <div class="container shell">
+        <a class="navbar-brand brand m-0 p-0" href="index.html">
+          <span class="brand-mark">m</span>
+          <span>cafe mania</span>
+          <span id="live-clock" class="ms-3 small fw-bold text-muted"></span>
+        </a>
+        <button id="themeToggle" type="button" class="btn btn-sm btn-outline-secondary ms-2" aria-label="Toggle light or dark theme">🌓 Theme</button>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNav">
+          <ul class="navbar-nav ms-auto gap-1 gap-md-2 mt-3 mt-md-0 mb-0">
+            <li class="nav-item"><a class="nav-link rounded-pill px-3 py-2 fw-bold small" href="index.html">Home</a></li>
+            <li class="nav-item"><a class="nav-link rounded-pill px-3 py-2 fw-bold small" href="menu.html">Menu</a></li>
+            <li class="nav-item"><a class="nav-link rounded-pill px-3 py-2 fw-bold small" href="about.html">About</a></li>
+            <li class="nav-item"><a class="nav-link rounded-pill px-3 py-2 fw-bold small active bg-primary" href="contact.html" aria-current="page">Contact</a></li>
+            <li class="nav-item"><a class="nav-link rounded-pill px-3 py-2 fw-bold small bg-primary text-white" href="cart.html">Cart <span class="cart-badge" data-cart-count aria-label="0 items in cart">0</span></a></li>
+            <li class="nav-item auth-nav-item"><a class="nav-link rounded-pill px-3 py-2 fw-bold small" href="login.html">Sign In</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <noscript><p class="container py-3">Please enable JavaScript to use the menu, cart and checkout.</p></noscript>
+  <main class="page pt-4 pt-md-5 pb-5">
+    <div class="container shell">
+
+      <div class="row g-4 align-items-center mb-5">
+        <div class="col-lg-6">
+          <span class="eyebrow">We'd love to hear from you</span>
+          <h1 class="display-6 fw-bold mb-3">Get in touch with Cafe Mania</h1>
+          <p class="text-muted lead fs-6">
+            Questions about our roast, bookings for small group meetings, or feedback on your last cup?
+            Drop us a line and our baristas will reply promptly.
+          </p>
+
+          <div class="d-flex flex-column gap-3 mt-4">
+            <div class="d-flex align-items-start gap-3">
+              <span class="fs-4">📍</span>
+              <div>
+                <strong class="d-block">Our Location</strong>
+                <span class="text-muted small">Astana, Kazakhstan · Mangilik El Ave 55</span>
+              </div>
+            </div>
+            <div class="d-flex align-items-start gap-3">
+              <span class="fs-4">⏰</span>
+              <div>
+                <strong class="d-block">Opening Hours</strong>
+                <span class="text-muted small">Daily: 08:00 – 22:00 · Fresh bakes ready at 07:00</span>
+              </div>
+            </div>
+            <div class="d-flex align-items-start gap-3">
+              <span class="fs-4">📞</span>
+              <div>
+                <strong class="d-block">Phone & Email</strong>
+                <span class="text-muted small">+7 (7172) 55-00-55 · hello@cafemania.kz</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="form-card p-4 p-md-5 rounded-4 shadow-sm border bg-body">
+            <h2 class="h4 fw-bold mb-3">Send a Message</h2>
+            <div id="contactPageNotice" class="alert alert-success d-none py-2 small mb-3" role="alert">
+              ✓ Thank you! Your message has been sent to our team.
+            </div>
+            <form id="contactPageForm" novalidate>
+              <div class="mb-3">
+                <label class="form-label small fw-bold" for="contactPageName">Your Name</label>
+                <input class="form-control" id="contactPageName" name="name" type="text" placeholder="e.g. Aliya Nurgali">
+                <small class="field-error text-danger d-block mt-1" id="contactPageName-error" data-error-for="contactPageName" aria-live="polite"></small>
+              </div>
+
+              <div class="row g-2 mb-3">
+                <div class="col-md-6">
+                  <label class="form-label small fw-bold" for="contactPageEmail">Email Address</label>
+                  <input class="form-control" id="contactPageEmail" name="email" type="text" inputmode="email" placeholder="you@example.com">
+                  <small class="field-error text-danger d-block mt-1" id="contactPageEmail-error" data-error-for="contactPageEmail" aria-live="polite"></small>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label small fw-bold" for="contactPagePhone">Phone Number</label>
+                  <input class="form-control" id="contactPagePhone" name="phone" type="text" inputmode="tel" placeholder="+7 777 123 45 67">
+                  <small class="field-error text-danger d-block mt-1" id="contactPagePhone-error" data-error-for="contactPagePhone" aria-live="polite"></small>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label small fw-bold" for="contactPageMessage">Your Message</label>
+                <textarea class="form-control" id="contactPageMessage" name="message" rows="4" placeholder="Tell us how we can help or make your next visit better..."></textarea>
+                <small class="field-error text-danger d-block mt-1" id="contactPageMessage-error" data-error-for="contactPageMessage" aria-live="polite"></small>
+              </div>
+
+              <button class="btn btn-primary w-100 py-2 fw-bold" type="submit" id="contactPageSubmit">
+                Send Message →
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="py-4">
+    <div class="container shell d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+      <div>
+        <a class="brand" href="index.html">
+          <span class="brand-mark">m</span>
+          <span>cafe mania</span>
+        </a>
+        <p class="mt-1 mb-0 small">Astana, Kazakhstan · your daily portion of comfort</p>
+        <p class="mt-1 mb-0 small">Team: Aidos, Arnur, Mukhammajon</p>
+        <p class="mt-1 mb-0 small"><a class="text-decoration-underline" href="responsive.html">Media queries demo</a></p>
+      </div>
+      <div>
+        <button class="btn btn-outline-primary btn-sm mb-3" type="button" data-sound-toggle aria-pressed="true">Sound on</button>
+        <div class="socials d-flex gap-2">
+          <a href="#" aria-label="Instagram" title="Instagram">IG</a>
+          <a href="#" aria-label="Telegram" title="Telegram">TG</a>
+          <a href="#" aria-label="Facebook" title="Facebook">FB</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/catalog.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/validation.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/site-ui.js"></script>
+  <script src="js/script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('contactPageForm');
+      const nameInput = document.getElementById('contactPageName');
+      const emailInput = document.getElementById('contactPageEmail');
+      const phoneInput = document.getElementById('contactPagePhone');
+      const msgInput = document.getElementById('contactPageMessage');
+      const notice = document.getElementById('contactPageNotice');
+
+      // Autofill logged-in user if available
+      const user = CafeAuth.getCurrentUser();
+      if (user) {
+        if (nameInput) nameInput.value = user.name || '';
+        if (emailInput) emailInput.value = user.email || '';
+        if (phoneInput && user.phone) phoneInput.value = user.phone;
+      }
+
+      CafeValidation.bindField(nameInput, val => CafeValidation.validateRequired(val, 'Name'));
+      CafeValidation.bindField(emailInput, val => CafeValidation.validateEmail(val));
+      CafeValidation.bindField(phoneInput, val => CafeValidation.validatePhone(val));
+      CafeValidation.bindField(msgInput, val => {
+        if (!val || val.trim().length < 5) return 'Please enter a message with at least 5 characters.';
+        return null;
+      });
+
+      form?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const nameErr = CafeValidation.validateRequired(nameInput.value, 'Name');
+        const emailErr = CafeValidation.validateEmail(emailInput.value);
+        const phoneErr = CafeValidation.validatePhone(phoneInput.value);
+        let msgErr = null;
+        if (!msgInput.value || msgInput.value.trim().length < 5) {
+          msgErr = 'Please enter a message with at least 5 characters.';
+        }
+
+        let isValid = true;
+        if (nameErr) { CafeValidation.showError(nameInput, nameErr); isValid = false; } else { CafeValidation.clearError(nameInput); }
+        if (emailErr) { CafeValidation.showError(emailInput, emailErr); isValid = false; } else { CafeValidation.clearError(emailInput); }
+        if (phoneErr) { CafeValidation.showError(phoneInput, phoneErr); isValid = false; } else { CafeValidation.clearError(phoneInput); }
+        if (msgErr) { CafeValidation.showError(msgInput, msgErr); isValid = false; } else { CafeValidation.clearError(msgInput); }
+
+        if (!isValid) return;
+
+        if (notice) notice.classList.remove('d-none');
+        if (window.CafeMania && typeof window.CafeMania.showToast === 'function') {
+          window.CafeMania.showToast('Message sent successfully! ☕');
+        }
+        form.reset();
+      });
+    });
+  </script>
+</body>
+</html>
