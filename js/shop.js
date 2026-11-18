@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const column = element('div', 'col product-entry');
     const card = element('article', 'card h-100 position-relative');
     const image = element('img', 'card-img-top');
+    image.src = product.image;
     image.dataset.lazySrc = product.image;
     image.classList.add('lazy-image');
     image.alt = product.name;
@@ -28,12 +29,13 @@ document.addEventListener('DOMContentLoaded', () => {
     favBtn.innerHTML = isFav ? '❤️' : '🤍';
     favBtn.dataset.favProduct = product.id;
     favBtn.setAttribute('aria-label', `Favorite ${product.name}`);
-    favBtn.style.width = '34px';
-    favBtn.style.height = '34px';
+    favBtn.style.width = '36px';
+    favBtn.style.height = '36px';
     favBtn.style.display = 'flex';
     favBtn.style.alignItems = 'center';
     favBtn.style.justifyContent = 'center';
     favBtn.style.zIndex = '5';
+    favBtn.style.cursor = 'pointer';
     favBtn.style.transition = 'transform 0.2s ease, background 0.2s ease';
 
     const body = element('div', 'card-body d-flex flex-column p-3');
@@ -117,8 +119,10 @@ document.addEventListener('DOMContentLoaded', () => {
         favs.push({
           id: product.id,
           title: product.name,
+          price: product.price,
           description: product.description,
           image: product.image,
+          category: product.category,
           ingredients: ['Cafe Mania house specialty']
         });
         favBtn.innerHTML = '❤️';

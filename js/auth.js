@@ -22,7 +22,7 @@
       registeredAt: '2026-09-15',
       beansBalance: 450,
       favoriteDrink: 'Cappuccino',
-      ordersCount: 7
+      ordersCount: 0
     }
   ];
 
