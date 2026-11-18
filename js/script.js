@@ -182,33 +182,42 @@ document.addEventListener('DOMContentLoaded', () => {
   CafeMania.showToast = showToast;
 
   /* -------------------------------------------------------------
-   * 4. LIGHT AND DARK MODES TOGGLE SWITCH (Req 3 - 5 points)
+   * 4. THEME SWITCHER: LIGHT, DARK & COLORFUL PALETTES (Req 3)
+   * Full cycle: Light -> Dark -> Green (Matcha) -> Blue (Ocean) -> Red (Berry) -> Light
    * ------------------------------------------------------------- */
   const themeButton = document.getElementById('themeToggle');
+  const themes = ['light', 'dark', 'green', 'blue', 'red'];
   let currentTheme = 'light';
   try {
     const savedTheme = localStorage.getItem('cafe-mania-theme');
-    if (savedTheme === 'dark' || savedTheme === 'light') {
+    if (themes.includes(savedTheme)) {
       currentTheme = savedTheme;
     }
   } catch (_) {}
 
   const applyTheme = () => {
-    const isDark = currentTheme === 'dark';
-    document.body.classList.toggle('dark-theme', isDark);
+    themes.forEach((theme) => document.body.classList.toggle(`${theme}-theme`, theme === currentTheme));
     document.body.dataset.theme = currentTheme;
-    document.documentElement.setAttribute('data-bs-theme', isDark ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-bs-theme', currentTheme === 'dark' ? 'dark' : 'light');
 
     if (themeButton) {
-      themeButton.textContent = isDark ? '☀️ Light' : '🌙 Dark';
-      themeButton.setAttribute('aria-label', `Switch to ${isDark ? 'light' : 'dark'} mode`);
-      themeButton.title = `Current mode: ${currentTheme}. Click to switch.`;
+      const labels = {
+        light: '☀️ Light',
+        dark: '🌙 Dark',
+        green: '🍵 Matcha',
+        blue: '🌊 Blue',
+        red: '🍓 Berry'
+      };
+      const nextTheme = themes[(themes.indexOf(currentTheme) + 1) % themes.length];
+      themeButton.textContent = labels[currentTheme] || currentTheme;
+      themeButton.setAttribute('aria-label', `Current theme: ${currentTheme}. Click to switch to ${nextTheme}.`);
+      themeButton.title = `Current: ${currentTheme}. Click to switch to ${nextTheme}.`;
     }
   };
   applyTheme();
 
   themeButton?.addEventListener('click', () => {
-    currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    currentTheme = themes[(themes.indexOf(currentTheme) + 1) % themes.length];
     applyTheme();
     try {
       localStorage.setItem('cafe-mania-theme', currentTheme);

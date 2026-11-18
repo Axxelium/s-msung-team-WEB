@@ -9,9 +9,14 @@
   <script>
     (function () {
       const theme = localStorage.getItem('cafe-mania-theme');
-      if (theme === 'dark') {
-        document.documentElement.setAttribute('data-bs-theme', 'dark');
-        document.body ? document.body.classList.add('dark-theme') : document.addEventListener('DOMContentLoaded', () => document.body.classList.add('dark-theme'));
+      const themes = ['light', 'dark', 'green', 'blue', 'red'];
+      if (themes.includes(theme)) {
+        document.documentElement.setAttribute('data-bs-theme', theme === 'dark' ? 'dark' : 'light');
+        const applyEarly = () => {
+          themes.forEach(t => document.body.classList.toggle(`${t}-theme`, t === theme));
+          document.body.dataset.theme = theme;
+        };
+        document.body ? applyEarly() : document.addEventListener('DOMContentLoaded', applyEarly);
       }
     })();
   </script>
