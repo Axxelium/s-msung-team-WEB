@@ -1,64 +1,74 @@
-# Cafe Mania — Website
+# Cafe Mania — Specialty Coffee House (Final Project)
 
-A small responsive cafe website
+A multi-page responsive web platform for a modern specialty coffee shop in Astana.
 
-## Pages
-- `index.html` — home page (hero + guest favorites)
-- `menu.html` — menu with category sidebar
-- `about.html` — our story, team, atmosphere gallery, hours
-- `cart.html` — shopping cart
-- `checkout.html` — checkout form
-- `responsive.html` — Assignment 3 Part 1 demo (media queries only, no Bootstrap)
-- `confirmation.html` — order confirmation
+**Live Demo:** [https://axxelium.github.io/s-msung-team-WEB/](https://axxelium.github.io/s-msung-team-WEB/)  
+**Team Members:** Aidos, Arnur, Mukhammajon  
+**Project Topic:** Specialty Coffee Shop & Bakery ("Cafe Mania")
 
-## JavaScript responsibilities
+---
 
-- `script.js`: existing FAQ accordion, contact popup, toast, theme cycle and clock.
-- `js/catalog.js`: catalog data, money formatting and safe element creation.
-- `js/cart.js`: cart state, calculations, storage validation and demo order snapshot.
-- `js/site-ui.js`: badges, keyboard navigation, sound preference and modal focus handling.
-- `js/shop.js`: menu/favorites rendering, filters and cart controls.
-- `js/checkout.js`: field validation, callbacks, step state and order review.
-- `js/confirmation.js`: actual order summary and local rating.
+## ☕ Connected Pages (9 functional pages)
 
+1. `index.html` — Home page with hero, live clock, animated counters, guest favorites, FAQ accordion, clipboard copy, and contact modal.
+2. `menu.html` — Full coffee & food menu with category filtering, live autocomplete search, and **Live World Specialty Coffee REST API Explorer**.
+3. `about.html` — Our story, barista team profiles, atmosphere photo gallery, and kitchen hours.
+4. `cart.html` — Interactive shopping cart with live calculations, promo code, and collection method selection.
+5. `checkout.html` — 3-step checkout form with pure JavaScript validation and auto-fill for logged-in members.
+6. `confirmation.html` — Order confirmation with summary, dynamic order tracking status, and interactive 5-star rating.
+7. `login.html` — Authentication simulation with dual tabs for **Log In** and **Sign Up** using pure JS validation and `localStorage`.
+8. `profile.html` — User Profile with stored details, digital "Gold Bean Club" loyalty card, saved favorite coffees, order history, and logout.
+9. `responsive.html` — Media Queries and responsive typography demonstration page.
 
-## Assignment 2 (Flexbox & Grid) — where each task lives
-- **Task 1, Flexbox navbar:** `#main-header .topbar` on every page (logo left, links right).
-- **Task 2, Flexbox card row:** `.card-grid` on `index.html` — equal-height cards with a lift/shadow hover effect.
-- **Task 3, Grid Areas layout:** `.menu-layout` on `menu.html` — `grid-template-areas` with header / sidebar / main / footer, sidebar holds category filters + kitchen hours.
-- **Task 4, Image gallery:** `.gallery-grid` on `about.html` — 9-photo grid with a caption overlay on hover.
+---
 
-## Assignment 3 (Media Queries + Bootstrap) — where each task lives
-- **Task 1, responsive typography:** media queries at 576px / 992px at the end of `css/style.css` (`h1`–`h3`, body text).
-- **Task 2, card group (no Bootstrap):** `.mq-cards` in `css/media-queries.css`, page `responsive.html` — 3 / 2 / 1 cards per row.
-- **Task 3, grid:** `container` + `row` / `col-*` on every page (hero `col-lg-6`, cards `col-lg-4` via `row-cols-lg-3`, cart/checkout `col-lg-8` + `col-lg-4`, menu sidebar `col-lg-3` + `col-lg-9`).
-- **Task 4, spacing:** `m-*`, `p-*`, `gap-*` utilities, with responsive ones such as `mt-lg-4`, `pt-md-5`, `p-sm-4`.
-- **Task 5, navbar:** `navbar navbar-expand-md` with `navbar-toggler` on every page (4 links: Home, Menu, About, Cart).
-- **Task 6, buttons:** `btn-primary`, `btn-secondary`, `btn-outline-primary`, `btn-lg`, `btn-sm`; `btn-group` for the collection method in `cart.html`.
-- **Task 7, carousel:** 9 slides with indicators and controls in `about.html`.
-- **Task 8, cards:** Bootstrap `card` in a `row-cols-*` grid on `index.html` and `menu.html` (`card-deck` no longer exists in Bootstrap 5).
-- **Task 9, form:** `form-control`, `form-select`, `input-group`, `form-check` in `checkout.html`.
-- **Task 10, accessibility:** semantic `<nav>`, `<button>`, labels, `aria-*`, alt texts, `visually-hidden` control labels.
+## 📋 Final Project Requirements Implementation Matrix
 
-## Assignment 5 — Part 1
-Cafe Mania now has a connected menu → cart → three-step checkout → confirmation flow.
+| Requirement | Points | Implementation Details |
+| :--- | :--- | :--- |
+| **1. Responsiveness** | 10 pts | Built with Bootstrap 5.3 + Flexbox + CSS Grid + custom media queries. Seamless display on mobile (320px+), tablet, and desktop without overflow. |
+| **2. Hosting** | 5 pts | Hosted on GitHub Pages. Relative asset paths ensure 0 broken links or 404s. |
+| **3. Light and Dark Modes** | 5 pts | Interactive **☀️ Light / 🌙 Dark** toggle switch in the navbar on every page. Persists across all pages in `localStorage` (`cafe-mania-theme`) with high-contrast, accessible palettes. |
+| **4. Design & User Experience** | 20 pts | Warm specialty coffee palette (espresso `#3c221e`, latte cream `#fdfbf7`, amber accents). Clear visual hierarchy, accessible touch targets, and rich imagery. |
+| **5.1. Authentication Simulation** | 10 pts | Simulates Sign Up & Log In via `localStorage` (`js/auth.js`). New signups receive 150 bonus beans. Valid login redirects to `profile.html` displaying user details, loyalty balance, and past orders. Navbar dynamically reflects auth state. |
+| **5.2. Form Validation** | 10 pts | **Strictly NO HTML validation attributes** (`required`, `pattern`, `minlength`, `maxlength`, `min`, `max`, or `type="email"` are NOT used). All forms have `novalidate`. Pure JavaScript validator (`js/validation.js` & `js/checkout.js`) checks email regex, password length (8+) & complexity, required fields, and phone patterns with friendly on-page error messages. |
+| **5.3. Search & Filtering** | 5 pts | Menu live search and category filters dynamically update results and save selections to `localStorage` (`cafe-mania-category`, `cafe-mania-search`). Users can bookmark favorite drinks (saved in `localStorage` and listed in `profile.html`). |
+| **5.4. Animated Buttons & UI Effects** | 5 pts | Smooth hover transitions (`translateY(-2px)`, warm shadow glow), micro-click press (`scale(0.97)`), rotating add buttons, animated badge pulses, toast alerts, and skeleton loaders (`css/style.css`). |
+| **7. External REST API Integration** | 10 pts | Integrated public **[SampleAPIs Coffee](https://api.sampleapis.com/coffee)** (`/hot` and `/iced`) using `fetch()` and `async/await`. Features visual loading spinner, error alert with retry button, temperature switcher, and curated offline fallback. |
+| **8. Feature Cohesion & Theme** | 10 pts | Every single feature, microcopy, bonus system, and API integration directly supports the specialty coffee shop experience. |
+| **10. Code Quality & Organization** | 5 pts | Structured directory layout matching requirements (`/css`, `/js`, `/images`). Modular code with comprehensive documentation and clean separation of concerns. |
 
-### requirement
+---
 
-| Requirement | Implementation |
-| :--- | :--- |
-| Select and modify DOM elements | `js/shop.js`: `productCard`, product grid, cart rows;<br>`js/checkout.js`: summaries |
-| Manipulating attributes (chosen option: rating stars) | `js/confirmation.js`: `renderRating`, `querySelectorAll`, classes and `aria-pressed` |
-| Click event listeners | `js/shop.js`: add/remove/quantity buttons and category filters |
-| Keyboard events | `js/site-ui.js`: navigation `keydown` handler |
-| Callbacks (chosen option: multi-step form) | `js/checkout.js`: `changeStep(index, onStepChange)` invokes the `renderStep` callback |
-| Switch statement | `js/shop.js`: `productsFor(category)` (Filter All, Coffee, Breakfast, Bakery, Lunch and Tea) |
-| Objects and methods | `js/catalog.js`: product objects;<br>`js/cart.js`: cart object with `add`, `remove`, `setQuantity`, `subtotal`, `total` |
-| Arrays and loops | `js/catalog.js`: products;<br>`js/shop.js`: `for…of` card/row rendering |
+## 📁 File Structure
 
-
-## Team
-Aidos, Arnur, Mukhammajon.
-
-## Deploy
-https://axxelium.github.io/s-msung-team-WEB/
+```
+s-msung-team-WEB-main/
+├── index.html              # Home page
+├── menu.html               # Menu & Live Coffee API
+├── about.html              # About & Team
+├── cart.html               # Shopping Cart
+├── checkout.html           # 3-Step Checkout Form
+├── confirmation.html       # Order Confirmation & Rating
+├── login.html              # Sign In & Sign Up Form
+├── profile.html            # User Profile & Loyalty
+├── responsive.html         # Pure Media Queries Demo
+├── README.md               # Project Documentation
+├── script.js               # Forwarding shim for backward compatibility
+├── css/
+│   ├── style.css           # Core stylesheet, light/dark themes, animations
+│   └── media-queries.css   # Custom responsive breakpoints
+├── js/
+│   ├── api.js              # External SampleAPIs Coffee REST API integration
+│   ├── auth.js             # Authentication simulation & localStorage user state
+│   ├── validation.js       # Pure JavaScript form validation engine
+│   ├── catalog.js          # Coffee shop product data & formatters
+│   ├── cart.js             # Cart state, discount logic, and order snapshot
+│   ├── site-ui.js          # Accessibility, sound toggle, and UI helpers
+│   ├── shop.js             # Menu grid rendering & category filters
+│   ├── checkout.js         # Multi-step checkout validation & review
+│   ├── confirmation.js     # Order summary & interactive star rating
+│   ├── script.js           # FAQ accordion, contact modal, toast, theme switch
+│   └── assignment6.js      # jQuery live search, counters, and scroll progress
+└── images/                 # Optimized images for products, team, and cafe
+```

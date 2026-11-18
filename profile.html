@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile — Cafe Mania</title>
+  <meta name="description" content="View your Cafe Mania Club profile, loyalty beans, favorite coffee recipes, and order history.">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/media-queries.css">
+  <script>
+    (function () {
+      const theme = localStorage.getItem('cafe-mania-theme');
+      if (theme === 'dark') {
+        document.documentElement.setAttribute('data-bs-theme', 'dark');
+        document.body ? document.body.classList.add('dark-theme') : document.addEventListener('DOMContentLoaded', () => document.body.classList.add('dark-theme'));
+      }
+    })();
+  </script>
+</head>
+<body class="page-profile">
+  <header id="main-header" class="border-bottom sticky-top bg-body">
+    <nav class="navbar navbar-expand-md py-3" aria-label="Main navigation">
+      <div class="container shell">
+        <a class="navbar-brand brand m-0 p-0" href="index.html">
+          <span class="brand-mark">m</span>
+          <span>cafe mania</span>
+          <span id="live-clock" class="ms-3 small fw-bold text-muted"></span>
+        </a>
+        <button id="themeToggle" type="button" class="btn btn-sm btn-outline-secondary ms-2" aria-label="Toggle light or dark theme">🌓 Theme</button>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNav">
+          <ul class="navbar-nav ms-auto gap-1 gap-md-2 mt-3 mt-md-0 mb-0">
+            <li class="nav-item"><a class="nav-link rounded-pill px-3 py-2 fw-bold small" href="index.html">Home</a></li>
+            <li class="nav-item"><a class="nav-link rounded-pill px-3 py-2 fw-bold small" href="menu.html">Menu</a></li>
+            <li class="nav-item"><a class="nav-link rounded-pill px-3 py-2 fw-bold small" href="about.html">About</a></li>
+            <li class="nav-item"><a class="nav-link rounded-pill px-3 py-2 fw-bold small bg-primary text-white" href="cart.html">Cart <span class="cart-badge" data-cart-count aria-label="0 items in cart">0</span></a></li>
+            <li class="nav-item auth-nav-item"><a class="nav-link rounded-pill px-3 py-2 fw-bold small active bg-primary" href="profile.html" aria-current="page">Profile</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="page pt-4 pt-md-5 pb-5">
+    <div class="container shell">
+      
+      <!-- User Hero Header -->
+      <div class="row align-items-center g-4 mb-5">
+        <div class="col-lg-8">
+          <span class="eyebrow">Cafe Mania Club Member</span>
+          <h1 class="display-6 fw-bold mb-2" id="profileGreeting">Hello, Guest</h1>
+          <p class="text-muted mb-0">Welcome back to your personal coffee corner. Manage your preferences, track orders, and redeem your coffee bean rewards.</p>
+        </div>
+        <div class="col-lg-4 text-lg-end">
+          <button class="btn btn-outline-danger btn-sm px-3 py-2 fw-bold" id="btnLogout" type="button">
+            🚪 Sign Out
+          </button>
+        </div>
+      </div>
+
+      <div class="row g-4">
+        <!-- Left Column: Loyalty Card & Personal Details -->
+        <div class="col-lg-5">
+          <!-- Digital Loyalty Card -->
+          <div class="card border-0 rounded-4 shadow-sm text-white mb-4 overflow-hidden" style="background: linear-gradient(135deg, #3c221e 0%, #591722 100%);">
+            <div class="card-body p-4">
+              <div class="d-flex justify-content-between align-items-start mb-4">
+                <div>
+                  <span class="badge bg-warning text-dark px-3 py-1 rounded-pill fw-bold text-uppercase small">Gold Bean Club</span>
+                  <div class="h5 fw-bold mt-2 mb-0" id="cardUserName">Aliya Nurgali</div>
+                </div>
+                <div class="display-6">☕</div>
+              </div>
+
+              <div class="mb-3">
+                <div class="small text-white-50">Loyalty Balance:</div>
+                <div class="display-5 fw-bold" id="cardBeansBalance">450 <span class="fs-6 fw-normal text-white-50">beans</span></div>
+              </div>
+
+              <div class="d-flex justify-content-between small text-white-50 border-top border-white-50 pt-2">
+                <span>Member Since: <strong class="text-white" id="cardMemberSince">2026-09-15</strong></span>
+                <span>Tier: <strong class="text-warning">Espresso Master</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stored User Details Card -->
+          <div class="card border-0 rounded-4 shadow-sm p-4 mb-4">
+            <h3 class="h5 fw-bold mb-3 border-bottom pb-2">Stored Profile Details (localStorage)</h3>
+            <dl class="row mb-0 small">
+              <dt class="col-sm-4 text-muted">Full Name:</dt>
+              <dd class="col-sm-8 fw-bold" id="detailName">—</dd>
+
+              <dt class="col-sm-4 text-muted">Email:</dt>
+              <dd class="col-sm-8" id="detailEmail">—</dd>
+
+              <dt class="col-sm-4 text-muted">Phone:</dt>
+              <dd class="col-sm-8" id="detailPhone">—</dd>
+
+              <dt class="col-sm-4 text-muted">Favorite:</dt>
+              <dd class="col-sm-8 text-primary fw-bold" id="detailFavorite">Vanilla Raf</dd>
+
+              <dt class="col-sm-4 text-muted">Total Orders:</dt>
+              <dd class="col-sm-8" id="detailOrders">3 orders</dd>
+            </dl>
+          </div>
+
+          <!-- Quick Update Profile Form (with pure JS validation) -->
+          <div class="card border-0 rounded-4 shadow-sm p-4">
+            <h3 class="h5 fw-bold mb-2">Update Phone or Name</h3>
+            <p class="text-muted small mb-3">Changes are instantly stored in your browser's localStorage.</p>
+            <form id="updateProfileForm" novalidate>
+              <div class="mb-3">
+                <label class="form-label small fw-bold" for="editName">Name</label>
+                <input class="form-control form-control-sm" id="editName" name="name" type="text">
+                <small class="field-error text-danger d-block mt-1" id="editName-error" data-error-for="editName" aria-live="polite"></small>
+              </div>
+              <div class="mb-3">
+                <label class="form-label small fw-bold" for="editPhone">Phone</label>
+                <input class="form-control form-control-sm" id="editPhone" name="phone" type="text" inputmode="tel">
+                <small class="field-error text-danger d-block mt-1" id="editPhone-error" data-error-for="editPhone" aria-live="polite"></small>
+              </div>
+              <button class="btn btn-primary btn-sm w-100 fw-bold" type="submit">Save Changes</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Right Column: Saved Favorite Drinks & Order History -->
+        <div class="col-lg-7">
+          <!-- Saved Favorites from API and Menu -->
+          <div class="card border-0 rounded-4 shadow-sm p-4 mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h3 class="h5 fw-bold mb-0">❤️ Your Saved Favorite Coffees</h3>
+              <a href="menu.html" class="btn btn-sm btn-outline-primary">+ Explore Menu</a>
+            </div>
+            <div id="favoritesList" class="row g-3">
+              <!-- Populated dynamically via localStorage -->
+            </div>
+          </div>
+
+          <!-- Order History Simulation -->
+          <div class="card border-0 rounded-4 shadow-sm p-4">
+            <h3 class="h5 fw-bold mb-3">📜 Recent Orders</h3>
+            <div class="table-responsive">
+              <table class="table table-hover align-middle small mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th scope="col">Order ID</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Items</th>
+                    <th scope="col">Total</th>
+                    <th scope="col">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="ordersTableBody">
+                  <tr>
+                    <td class="fw-bold">#CM-8492</td>
+                    <td>Today, 14:20</td>
+                    <td>Cappuccino (Large), Butter Croissant</td>
+                    <td class="fw-bold">2 700 ₸</td>
+                    <td><span class="badge bg-success">Completed</span></td>
+                  </tr>
+                  <tr>
+                    <td class="fw-bold">#CM-7911</td>
+                    <td>Yesterday</td>
+                    <td>Spanish Latte, Cheesecake</td>
+                    <td class="fw-bold">3 200 ₸</td>
+                    <td><span class="badge bg-success">Completed</span></td>
+                  </tr>
+                  <tr>
+                    <td class="fw-bold">#CM-6104</td>
+                    <td>12 Nov 2026</td>
+                    <td>Flat White x2</td>
+                    <td class="fw-bold">2 800 ₸</td>
+                    <td><span class="badge bg-success">Completed</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="py-4 border-top">
+    <div class="container shell d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+      <div>
+        <a class="brand" href="index.html">
+          <span class="brand-mark">m</span>
+          <span>cafe mania</span>
+        </a>
+        <p class="mt-1 mb-0 small">Astana, Kazakhstan · your daily portion of comfort</p>
+        <p class="mt-1 mb-0 small">Team: Aidos, Arnur, Mukhammajon</p>
+      </div>
+      <div>
+        <a class="btn btn-sm btn-outline-secondary" href="menu.html">Menu</a>
+        <a class="btn btn-sm btn-outline-secondary ms-2" href="cart.html">Cart</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/catalog.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/site-ui.js"></script>
+  <script src="js/validation.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Check if user is logged in
+      const currentUser = CafeAuth.getCurrentUser();
+      if (!currentUser) {
+        // Redirect to login if not authenticated
+        window.location.href = 'login.html';
+        return;
+      }
+
+      // Populate User Details
+      document.getElementById('profileGreeting').textContent = `Hello, ${currentUser.name}!`;
+      document.getElementById('cardUserName').textContent = currentUser.name;
+      document.getElementById('cardBeansBalance').innerHTML = `${currentUser.beansBalance || 450} <span class="fs-6 fw-normal text-white-50">beans</span>`;
+      document.getElementById('cardMemberSince').textContent = currentUser.registeredAt || '2026-09-15';
+
+      document.getElementById('detailName').textContent = currentUser.name;
+      document.getElementById('detailEmail').textContent = currentUser.email;
+      document.getElementById('detailPhone').textContent = currentUser.phone || 'Not specified';
+      document.getElementById('detailFavorite').textContent = currentUser.favoriteDrink || 'Vanilla Raf';
+      document.getElementById('detailOrders').textContent = `${currentUser.ordersCount || 3} orders`;
+
+      // Set form inputs for editing
+      const editName = document.getElementById('editName');
+      const editPhone = document.getElementById('editPhone');
+      editName.value = currentUser.name;
+      editPhone.value = currentUser.phone || '';
+
+      // Bind validation to update form
+      CafeValidation.bindField(editName, val => CafeValidation.validateRequired(val, 'Name'));
+      CafeValidation.bindField(editPhone, val => CafeValidation.validatePhone(val));
+
+      // Handle Update Profile Form
+      const updateForm = document.getElementById('updateProfileForm');
+      updateForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const nameErr = CafeValidation.validateRequired(editName.value, 'Name');
+        const phoneErr = CafeValidation.validatePhone(editPhone.value);
+
+        let isValid = true;
+        if (nameErr) { CafeValidation.showError(editName, nameErr); isValid = false; } else { CafeValidation.clearError(editName); }
+        if (phoneErr) { CafeValidation.showError(editPhone, phoneErr); isValid = false; } else { CafeValidation.clearError(editPhone); }
+
+        if (!isValid) return;
+
+        currentUser.name = editName.value.trim();
+        currentUser.phone = editPhone.value.trim();
+        CafeAuth.setCurrentUser(currentUser);
+
+        // Also update stored users list
+        const users = CafeAuth.getUsers();
+        const idx = users.findIndex(u => u.email.toLowerCase() === currentUser.email.toLowerCase());
+        if (idx >= 0) {
+          users[idx].name = currentUser.name;
+          users[idx].phone = currentUser.phone;
+          try { localStorage.setItem('cafe-mania-users', JSON.stringify(users)); } catch (_) {}
+        }
+
+        if (window.CafeMania && typeof window.CafeMania.showToast === 'function') {
+          window.CafeMania.showToast('Profile updated successfully!');
+        }
+
+        // Re-render
+        document.getElementById('profileGreeting').textContent = `Hello, ${currentUser.name}!`;
+        document.getElementById('cardUserName').textContent = currentUser.name;
+        document.getElementById('detailName').textContent = currentUser.name;
+        document.getElementById('detailPhone').textContent = currentUser.phone;
+        CafeAuth.updateNavbar();
+      });
+
+      // Handle Logout
+      document.getElementById('btnLogout').addEventListener('click', () => {
+        CafeAuth.logOut();
+      });
+
+      // Render Favorites from localStorage
+      const favoritesList = document.getElementById('favoritesList');
+      let favorites = [];
+      try {
+        const stored = localStorage.getItem('cafe-mania-favorites');
+        favorites = stored ? JSON.parse(stored) : [];
+      } catch (_) {}
+
+      if (favorites.length === 0) {
+        // Add sample starter favorites
+        favorites = [
+          { title: 'Spanish Latte (Cortado)', description: 'Espresso with warm and condensed milk.', ingredients: ['Espresso', 'Condensed milk'] },
+          { title: 'Flat White', description: 'Double espresso topped with micro-foamed milk.', ingredients: ['Double Espresso', 'Steamed Milk'] }
+        ];
+        try { localStorage.setItem('cafe-mania-favorites', JSON.stringify(favorites)); } catch (_) {}
+      }
+
+      favoritesList.innerHTML = '';
+      favorites.forEach((fav, i) => {
+        const card = document.createElement('div');
+        card.className = 'col-md-6';
+        card.innerHTML = `
+          <div class="border rounded-3 p-3 h-100 bg-body d-flex flex-column justify-content-between">
+            <div>
+              <div class="d-flex justify-content-between align-items-start">
+                <h4 class="h6 fw-bold mb-1">${fav.title}</h4>
+                <button class="btn btn-sm btn-link text-danger p-0 btn-remove-fav" data-index="${i}" title="Remove">✕</button>
+              </div>
+              <p class="text-muted small mb-2">${fav.description || 'Specialty cafe recipe.'}</p>
+            </div>
+            <a href="menu.html" class="btn btn-outline-primary btn-sm mt-2">Order Similar</a>
+          </div>
+        `;
+        favoritesList.appendChild(card);
+      });
+
+      favoritesList.querySelectorAll('.btn-remove-fav').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const idx = Number(btn.getAttribute('data-index'));
+          favorites.splice(idx, 1);
+          try { localStorage.setItem('cafe-mania-favorites', JSON.stringify(favorites)); } catch (_) {}
+          window.location.reload();
+        });
+      });
+    });
+  </script>
+</body>
+</html>

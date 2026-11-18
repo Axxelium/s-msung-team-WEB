@@ -6,6 +6,16 @@
   <title>Cafe Mania - Media Queries</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/media-queries.css">
+  <script>
+    (function () {
+      const theme = localStorage.getItem('cafe-mania-theme');
+      if (theme === 'dark') {
+        document.documentElement.setAttribute('data-bs-theme', 'dark');
+        document.body ? document.body.classList.add('dark-theme') : document.addEventListener('DOMContentLoaded', () => document.body.classList.add('dark-theme'));
+      }
+    })();
+  </script>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </head>
 <body>
 
@@ -37,7 +47,7 @@
         <h2>Card group</h2>
         <div class="mq-cards">
         <article class="card">
-          <img src="images/cofee.jpg" alt="Coffee and croissant set">
+          <img data-lazy-src="images/cofee.jpg" alt="Coffee and croissant set">
           <div class="card-body">
             <h3>Morning Set</h3>
             <p>Cappuccino, a fresh croissant, and jam.</p>
@@ -45,7 +55,7 @@
           </div>
         </article>
         <article class="card">
-          <img src="images/zavtrak.jpg" alt="Breakfast plate with toast and berries">
+          <img data-lazy-src="images/zavtrak.jpg" alt="Breakfast plate with toast and berries">
           <div class="card-body">
             <h3>Mania Brunch</h3>
             <p>Toast, egg, berries, and fresh filter coffee.</p>
@@ -53,7 +63,7 @@
           </div>
         </article>
         <article class="card">
-          <img src="images/pirog.jpg" alt="Berry pastry">
+          <img data-lazy-src="images/pirog.jpg" alt="Berry pastry">
           <div class="card-body">
             <h3>Berry Puff</h3>
             <p>Warm pastry with seasonal berries.</p>
@@ -77,7 +87,12 @@
   </footer>
   <script src="js/catalog.js"></script>
   <script src="js/cart.js"></script>
-  <script src="script.js"></script>
+  <script src="js/script.js"></script>
   <script src="js/site-ui.js"></script>
+  <script src="js/assignment6.js"></script>
 </body>
 </html>
+
+
+
+

@@ -915,3 +915,91 @@ body.dark-theme #themeToggle { --bs-btn-color: var(--ink); --bs-btn-border-color
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
+
+/* Assignment 6 jQuery enhancements */
+.scroll-progress { position: fixed; inset: 0 0 auto; z-index: 1080; height: 5px; background: color-mix(in srgb, var(--line) 65%, transparent); pointer-events: none; }
+.scroll-progress__fill { display: block; width: 0; height: 100%; background: linear-gradient(90deg, var(--wine), #df9e58); transition: width 80ms linear; }
+.menu-search { max-width: 38rem; }
+.search-suggestions { position: absolute; top: 100%; left: 0; right: 0; z-index: 20; max-height: 16rem; overflow-y: auto; box-shadow: 0 0.75rem 1.5rem #0002; }
+.search-suggestions[hidden] { display: none; }
+.search-suggestions li { list-style: none; }
+.search-suggestions button { width: 100%; text-align: left; }
+#menu-results { min-height: 1.5rem; margin-top: .75rem; }
+#product-grid mark { background: #ffe39b; color: inherit; border-radius: .2em; padding: 0 .08em; }
+.engagement-strip { background: var(--sand); border: 1px solid var(--line); }
+.animated-counter { color: var(--wine); font-size: 1.35em; font-variant-numeric: tabular-nums; }
+.copy-menu-link { min-width: min(100%, 19rem); }
+@media (prefers-reduced-motion: reduce) { .scroll-progress__fill { transition: none; } }
+
+/* Requirement 6: Enhanced Interactive Buttons & Animated Micro-interactions */
+.btn {
+    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s ease, background-color 0.2s ease, color 0.2s ease;
+}
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(89, 23, 34, 0.16);
+}
+.btn:active {
+    transform: scale(0.97) translateY(0);
+}
+.btn-round {
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease;
+}
+.btn-round:hover {
+    transform: rotate(90deg) scale(1.12);
+}
+.btn-fav-toggle {
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease;
+}
+.btn-fav-toggle:hover {
+    transform: scale(1.18);
+}
+
+/* Authentication Nav Buttons */
+.btn-auth-profile {
+    background: #df9e58 !important;
+    color: #291811 !important;
+    border: 1px solid #c28340;
+    transition: all 0.2s ease;
+}
+.btn-auth-profile:hover {
+    background: #c28340 !important;
+    color: #fff !important;
+}
+.btn-auth-login {
+    border: 1px solid var(--wine);
+    color: var(--wine);
+}
+body.dark-theme .btn-auth-login {
+    border-color: #efb5ac;
+    color: #efb5ac;
+}
+
+/* Requirement 7: World Specialty Coffee API Section */
+.api-explorer-section {
+    background: var(--sand);
+    border: 1px solid var(--line);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+body.dark-theme .api-explorer-section {
+    background: var(--cream);
+    border-color: var(--line);
+}
+body.dark-theme .api-explorer-section code {
+    color: #efb5ac;
+}
+
+/* Requirement 5.2: Field error shake animation */
+.field-error {
+    font-size: 0.82rem;
+    animation: field-error-enter 0.25s ease;
+}
+@keyframes field-error-enter {
+    0% { opacity: 0; transform: translateY(-4px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Requirement 3: Smooth Theme Switching Transitions */
+body, #main-header, footer, .card, .page, .summary, .form-card {
+    transition: background-color 0.28s ease, color 0.28s ease, border-color 0.28s ease;
+}

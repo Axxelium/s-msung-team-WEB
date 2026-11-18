@@ -9,7 +9,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const column = element('div', 'col product-entry');
     const card = element('article', 'card h-100');
     const image = element('img', 'card-img-top');
-    image.src = product.image;
+    image.dataset.lazySrc = product.image;
+    image.classList.add('lazy-image');
     image.alt = product.name;
     image.loading = 'lazy';
     const body = element('div', 'card-body d-flex flex-column p-3');
@@ -50,10 +51,22 @@ document.addEventListener('DOMContentLoaded', () => {
         button.setAttribute('aria-pressed', String(active));
       });
       const selected = filters.find((button) => button.dataset.category === category);
-      document.getElementById('menu-results').textContent = `${selected.textContent} · ${products.length} ${products.length === 1 ? 'item' : 'items'}`;
+      grid.dataset.currentCategory = category;
+      try { localStorage.setItem('cafe-mania-category', category); } catch (_) {}
+      const resultsEl = document.getElementById('menu-results');
+      if (resultsEl && selected) {
+        resultsEl.textContent = `${selected.textContent} · ${products.length} ${products.length === 1 ? 'item' : 'items'}`;
+      }
     };
     filters.forEach((button) => button.addEventListener('click', () => renderProducts(button.dataset.category)));
-    renderProducts('all');
+    let initialCategory = 'all';
+    try {
+      const savedCategory = localStorage.getItem('cafe-mania-category');
+      if (savedCategory && filters.some(b => b.dataset.category === savedCategory)) {
+        initialCategory = savedCategory;
+      }
+    } catch (_) {}
+    renderProducts(initialCategory);
   }
 
   if (favorites) {

@@ -1,11 +1,31 @@
+/**
+ * Cafe Mania - Checkout Form Logic
+ * Fulfills Requirement 5.2:
+ * - NO HTML validation attributes used (no required, pattern, minlength, maxlength, min, max, type="email")
+ * - Validates: Email format, Password length & complexity, Required fields, Phone number pattern
+ * - Displays user-friendly error messages on the page under each field
+ */
+
 document.addEventListener('DOMContentLoaded', () => {
   'use strict';
   const app = window.CafeMania;
   const { cart, element, money } = app;
   const checkoutForm = document.getElementById('contact-form');
   if (!checkoutForm) return;
-  checkoutForm.noValidate = true;
-  const fields = [...checkoutForm.querySelectorAll('input[required], textarea')];
+
+  checkoutForm.setAttribute('novalidate', 'true');
+
+  // Input fields to validate in pure JS without HTML attributes
+  const requiredFieldIds = new Set(['name', 'email', 'phone', 'password', 'confirm-password']);
+  const fields = [
+    document.getElementById('name'),
+    document.getElementById('email'),
+    document.getElementById('phone'),
+    document.getElementById('address'),
+    document.getElementById('password'),
+    document.getElementById('confirm-password')
+  ].filter(Boolean);
+
   const steps = [...checkoutForm.querySelectorAll('[data-checkout-step]')];
   const nextButton = document.getElementById('checkout-next');
   const backButton = document.getElementById('checkout-back');
@@ -14,11 +34,27 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentStep = 0;
   let submitting = false;
 
+  // Auto-fill logged in user info if available
+  if (window.CafeAuth && typeof window.CafeAuth.getCurrentUser === 'function') {
+    const user = window.CafeAuth.getCurrentUser();
+    if (user) {
+      if (document.getElementById('name') && !document.getElementById('name').value) {
+        document.getElementById('name').value = user.name;
+      }
+      if (document.getElementById('email') && !document.getElementById('email').value) {
+        document.getElementById('email').value = user.email;
+      }
+      if (document.getElementById('phone') && !document.getElementById('phone').value && user.phone) {
+        document.getElementById('phone').value = user.phone;
+      }
+    }
+  }
+
   const errorFor = (field) => {
     let error = checkoutForm.querySelector(`[data-error-for="${field.id}"]`);
     if (!error) {
       error = document.createElement('small');
-      error.className = 'field-error';
+      error.className = 'field-error text-danger d-block mt-1';
       error.dataset.errorFor = field.id;
       error.setAttribute('aria-live', 'polite');
       field.insertAdjacentElement('afterend', error);
@@ -26,44 +62,77 @@ document.addEventListener('DOMContentLoaded', () => {
     return error;
   };
 
+  /**
+   * Pure JavaScript validation message generator (strictly fulfilling Requirement 5.2)
+   */
   const messageFor = (field) => {
     if (field.disabled) return '';
     const value = field.type === 'password' ? field.value : field.value.trim();
-    if (!value.trim()) return field.required ? 'This field is required.' : '';
-    if (field.maxLength > 0 && value.length > field.maxLength) {
-      return `Use no more than ${field.maxLength} characters.`;
+
+    // 1. Required fields validation
+    const isRequired = requiredFieldIds.has(field.id) || (field.id === 'address' && cart.method === 'delivery');
+    if (isRequired && !value) {
+      return 'This field is required.';
     }
-    if (field.id === 'name' && (value.length < 2 || !/^[\p{L}\p{M} .’'\-]+$/u.test(value) || !/\p{L}/u.test(value))) {
-      return 'Enter your name using at least 2 characters, without numbers or special symbols.';
+
+    // 2. Name validation
+    if (field.id === 'name') {
+      if (value.length < 2 || !/^[\p{L}\p{M} .’'\-]+$/u.test(value) || !/\p{L}/u.test(value)) {
+        return 'Enter your name using at least 2 characters, without numbers or special symbols.';
+      }
     }
-    if (field.type === 'email' && (field.validity.typeMismatch || !/^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/.test(value))) {
-      return 'Enter a valid email address, for example you@example.com.';
+
+    // 3. Email format validation (Pure JS Regex)
+    if (field.id === 'email') {
+      if (window.CafeValidation) {
+        const err = window.CafeValidation.validateEmail(value);
+        if (err) return err;
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value)) {
+        return 'Please enter a valid email address (e.g. you@example.com).';
+      }
     }
+
+    // 4. Phone number pattern validation (Pure JS Regex)
     if (field.id === 'phone') {
-      const digits = value.replace(/\D/g, '');
-      if (!/^\+?[\d\s()\-]+$/.test(value) || digits.length < 10 || digits.length > 15 || /^0+$/.test(digits)) {
-        return 'Enter a phone number with 10–15 digits; spaces, brackets and a leading + are allowed.';
+      if (window.CafeValidation) {
+        const err = window.CafeValidation.validatePhone(value);
+        if (err) return err;
+      } else {
+        const digits = value.replace(/\D/g, '');
+        if (digits.length < 10 || digits.length > 15) {
+          return 'Enter a phone number with 10–15 digits (e.g. +7 777 123 45 67).';
+        }
       }
     }
-    if (field.id === 'address' && (value.length < 5 || !/[\p{L}\p{N}]/u.test(value))) {
-      return 'Enter a delivery address with at least 5 characters.';
+
+    // 5. Address validation (for delivery)
+    if (field.id === 'address' && cart.method === 'delivery') {
+      if (value.length < 5) {
+        return 'Enter a delivery address with at least 5 characters (street, building, apartment).';
+      }
     }
+
+    // 6. Password length and complexity validation
     if (field.id === 'password') {
-      if (value.length < 8) return 'Password is too weak. Use at least 8 characters.';
-      const substitutions = { '@': 'a', '4': 'a', '0': 'o', '3': 'e', '$': 's', '5': 's', '1': 'i', '!': 'i', '7': 't' };
-      const normalized = value.toLowerCase().replace(/[@403$51!7]/g, (character) => substitutions[character]);
-      const commonPasswords = ['password', 'qwerty', 'letmein', 'welcome', 'admin', 'iloveyou', 'abc123', '123456', 'пароль'];
-      if (commonPasswords.some((word) => value.toLowerCase().includes(word) || normalized.includes(word)) || /(.{1,4})\1{2,}/u.test(value)) {
-        return 'Password is too easy to guess. Avoid common words, sequences and repeated characters.';
-      }
-      if (!/\p{Lu}/u.test(value) || !/\p{Ll}/u.test(value) || !/\d/.test(value) || !/[^\p{L}\p{N}\s]/u.test(value)) {
-        return 'Password is too weak. Include uppercase and lowercase letters, a number and a special character.';
+      if (window.CafeValidation) {
+        const err = window.CafeValidation.validatePassword(value);
+        if (err) return err;
+      } else {
+        if (value.length < 8) return 'Password must be at least 8 characters long.';
+        if (!/[A-Z]/.test(value) || !/[a-z]/.test(value) || !/\d/.test(value) || !/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(value)) {
+          return 'Include uppercase and lowercase letters, a number and a special symbol.';
+        }
       }
     }
+
+    // 7. Confirm password validation
     if (field.id === 'confirm-password') {
       const password = checkoutForm.querySelector('#password');
-      if (password && field.value !== password.value) return 'Passwords do not match.';
+      if (password && field.value !== password.value) {
+        return 'Passwords do not match.';
+      }
     }
+
     return '';
   };
 
@@ -126,12 +195,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (moveFocus) steps[index].querySelector('legend').focus();
   }
 
-  // A higher-order function accepts a callback that renders the selected step.
   function changeStep(index, onStepChange) {
     if (index < 0 || index >= steps.length) return;
     currentStep = index;
     onStepChange(currentStep);
   }
+
   function goNext() {
     const stepFields = fields.filter((field) => steps[currentStep].contains(field) && !field.disabled);
     if (!validate(stepFields)) {
@@ -140,13 +209,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     changeStep(currentStep + 1, renderStep);
   }
+
   nextButton.addEventListener('click', goNext);
   backButton.addEventListener('click', () => changeStep(currentStep - 1, renderStep));
 
   fields.forEach((field) => {
     field.addEventListener('input', () => {
       validateField(field);
-      if (field.id === 'password' && document.getElementById('confirm-password').value) validateField(document.getElementById('confirm-password'));
+      if (field.id === 'password' && document.getElementById('confirm-password').value) {
+        validateField(document.getElementById('confirm-password'));
+      }
     });
     field.addEventListener('blur', () => {
       if (field.type !== 'password') field.value = field.value.trim();
@@ -160,7 +232,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('checkout-summary').hidden = empty;
     document.getElementById('checkout-empty').hidden = !empty;
     document.querySelectorAll('[name="delivery"]').forEach((radio) => { radio.checked = radio.value === cart.method; });
-    address.required = cart.method === 'delivery';
     address.disabled = cart.method !== 'delivery';
     document.getElementById('address-group').hidden = address.disabled;
     if (address.disabled) validateField(address);
@@ -195,15 +266,31 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!cart.items.length) { renderSummary(); return; }
     submitting = true;
     submitButton.disabled = true;
+    submitButton.setAttribute('aria-busy', 'true');
+    submitButton.dataset.originalLabel = submitButton.textContent.trim();
+    submitButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>Please wait...';
     const order = cart.placeOrder();
     if (!order) {
       document.getElementById('checkout-error').textContent = 'Your order could not be saved. Enable browser storage or free some space, then try again.';
       submitting = false;
       submitButton.disabled = false;
+      submitButton.removeAttribute('aria-busy');
+      submitButton.textContent = submitButton.dataset.originalLabel;
       return;
     }
+
+    // If order placed, also register bonus beans for the user in localStorage
+    if (window.CafeAuth && typeof window.CafeAuth.getCurrentUser === 'function') {
+      const user = window.CafeAuth.getCurrentUser();
+      if (user) {
+        user.beansBalance = (user.beansBalance || 0) + Math.round(cart.total() * 0.05); // 5% bonus beans!
+        user.ordersCount = (user.ordersCount || 0) + 1;
+        window.CafeAuth.setCurrentUser(user);
+      }
+    }
+
     checkoutForm.reset();
-    window.location.assign('confirmation.html');
+    window.setTimeout(() => window.location.assign('confirmation.html'), 700);
   });
 
   window.addEventListener('pageshow', (event) => {
@@ -212,6 +299,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('confirm-password').value = '';
     submitting = false;
     submitButton.disabled = false;
+    submitButton.removeAttribute('aria-busy');
+    submitButton.textContent = submitButton.dataset.originalLabel || 'Confirm order →';
     cart.load();
     renderSummary();
   });
