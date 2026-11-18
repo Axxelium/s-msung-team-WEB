@@ -231,14 +231,57 @@
       // Populate User Details
       document.getElementById('profileGreeting').textContent = `Hello, ${currentUser.name}!`;
       document.getElementById('cardUserName').textContent = currentUser.name;
-      document.getElementById('cardBeansBalance').innerHTML = `${currentUser.beansBalance || 450} <span class="fs-6 fw-normal text-white-50">beans</span>`;
+      const beans = currentUser.beansBalance !== undefined ? currentUser.beansBalance : 0;
+      document.getElementById('cardBeansBalance').innerHTML = `${beans} <span class="fs-6 fw-normal text-white-50">beans</span>`;
       document.getElementById('cardMemberSince').textContent = currentUser.registeredAt || '2026-09-15';
 
       document.getElementById('detailName').textContent = currentUser.name;
       document.getElementById('detailEmail').textContent = currentUser.email;
       document.getElementById('detailPhone').textContent = currentUser.phone || 'Not specified';
       document.getElementById('detailFavorite').textContent = currentUser.favoriteDrink || 'Vanilla Raf';
-      document.getElementById('detailOrders').textContent = `${currentUser.ordersCount || 3} orders`;
+
+      // Load orders history from localStorage
+      const ordersTableBody = document.getElementById('ordersTableBody');
+      let ordersHistory = [];
+      try {
+        const stored = localStorage.getItem('cafe-mania-orders-history');
+        ordersHistory = stored ? JSON.parse(stored) : [];
+      } catch (_) {}
+
+      // If user has placed orders, dynamically render them
+      if (ordersHistory.length > 0) {
+        ordersTableBody.innerHTML = '';
+        ordersHistory.forEach(ord => {
+          const tr = document.createElement('tr');
+          let dateStr = 'Recent';
+          try {
+            if (ord.createdAt) {
+              const d = new Date(ord.createdAt);
+              dateStr = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) + ', ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            }
+          } catch (_) {}
+
+          const itemsText = (ord.items || []).map(it => {
+            const p = window.CafeMania && window.CafeMania.productById ? window.CafeMania.productById(it.id) : null;
+            const title = p ? p.name : it.id;
+            return `${title}${it.quantity > 1 ? ` × ${it.quantity}` : ''}`;
+          }).join(', ') || 'Coffee order';
+
+          const formattedTotal = (window.CafeMania && window.CafeMania.money) ? window.CafeMania.money(ord.total) : `${ord.total} ₸`;
+
+          tr.innerHTML = `
+            <td class="fw-bold">#${ord.id}</td>
+            <td>${dateStr}</td>
+            <td>${itemsText}</td>
+            <td class="fw-bold">${formattedTotal}</td>
+            <td><span class="badge bg-success">Completed</span></td>
+          `;
+          ordersTableBody.appendChild(tr);
+        });
+        document.getElementById('detailOrders').textContent = `${ordersHistory.length} orders`;
+      } else {
+        document.getElementById('detailOrders').textContent = `${currentUser.ordersCount || 0} orders`;
+      }
 
       // Set form inputs for editing
       const editName = document.getElementById('editName');

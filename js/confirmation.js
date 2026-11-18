@@ -24,9 +24,29 @@ document.addEventListener('DOMContentLoaded', () => {
     list.append(row);
   }
   const delivery = order.method === 'delivery' ? 700 : 0;
+  const discount = Number(order.beansDiscount) || 0;
+  const finalTotal = order.total !== undefined ? order.total : Math.max(0, subtotal + delivery - discount);
+
   document.getElementById('confirmation-method').textContent = order.method === 'delivery' ? 'Delivery' : 'Pick up at Cafe Mania';
   document.getElementById('confirmation-delivery').textContent = delivery ? money(delivery) : 'Free';
-  document.getElementById('confirmation-total').textContent = money(subtotal + delivery);
+
+  const beansLine = document.getElementById('confirmation-beans-line');
+  const beansDiscountEl = document.getElementById('confirmation-beans-discount');
+  if (discount > 0) {
+    beansLine?.classList.remove('d-none');
+    if (beansDiscountEl) beansDiscountEl.textContent = `-${money(discount)}`;
+  } else {
+    beansLine?.classList.add('d-none');
+  }
+
+  document.getElementById('confirmation-total').textContent = money(finalTotal);
+
+  const beansEarnedEl = document.getElementById('confirmation-beans-earned');
+  const earned = order.beansEarned || Math.round(finalTotal * 0.05);
+  if (beansEarnedEl) {
+    beansEarnedEl.classList.remove('d-none');
+    beansEarnedEl.innerHTML = `☕ You earned <strong>+${earned} bonus beans</strong> on this order!`;
+  }
 
   const stars = [...document.querySelectorAll('[data-rating]')];
   const renderRating = (rating) => {

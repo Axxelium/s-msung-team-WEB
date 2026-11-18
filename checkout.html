@@ -159,18 +159,32 @@
               </fieldset>
               <fieldset class="checkout-step" data-checkout-step hidden>
                 <legend tabindex="-1">One last check</legend>
-                <div class="row g-3">
-                  <div class="col-md-6">
-                    <label class="form-label" for="password">Create password</label>
-                    <input class="form-control" id="password" name="password" aria-describedby="password-help" type="password" autocomplete="new-password">
-                    <small class="form-text d-block" id="password-help">Use 8+ characters with uppercase and lowercase letters, a number and a special character.</small>
-                    <small class="field-error" id="password-error" data-error-for="password" aria-live="polite">
-                    </small>
+
+                <!-- Loyalty Bonus Beans Switcher -->
+                <div id="bonus-beans-card" class="p-3 mb-4 rounded-4 border">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                      <div class="fw-bold d-flex align-items-center gap-2">
+                        <span>☕</span> Cafe Mania Club Beans
+                      </div>
+                      <div class="small text-muted" id="beans-available-text">Available: 0 beans (1 bean = 1 ₸)</div>
+                    </div>
+                    <div class="form-check form-switch mb-0">
+                      <input class="form-check-input" type="checkbox" id="useBeansToggle" role="switch" style="cursor: pointer; width: 2.5em; height: 1.3em;">
+                      <label class="form-check-label fw-bold small ms-1" for="useBeansToggle">Redeem</label>
+                    </div>
                   </div>
-                  <div class="col-md-6">
-                    <label class="form-label" for="confirm-password">Confirm password</label>
-                    <input class="form-control" id="confirm-password" name="confirm-password" type="password" autocomplete="new-password">
-                    <small class="field-error" id="confirm-password-error" data-error-for="confirm-password" aria-live="polite">
+                  <div class="small text-success fw-bold mt-2 d-none" id="beans-discount-notice">
+                    ✓ Applied discount to your order!
+                  </div>
+                </div>
+
+                <div class="row g-3">
+                  <div class="col-12">
+                    <label class="form-label" for="account-password">Account password</label>
+                    <input class="form-control" id="account-password" name="account-password" type="password" autocomplete="current-password" placeholder="Enter your account password to confirm">
+                    <small class="form-text d-block" id="password-help">Confirm your order with your Cafe Mania account password.</small>
+                    <small class="field-error" id="account-password-error" data-error-for="account-password" aria-live="polite">
                     </small>
                   </div>
                 </div>
@@ -203,10 +217,17 @@
                 <strong id="checkout-delivery">
                 </strong>
               </div>
+              <div class="summary-line text-success d-none" id="checkout-beans-line">
+                <span>Beans discount</span>
+                <strong id="checkout-beans-discount">-0 ₸</strong>
+              </div>
               <div class="summary-line total-line">
                 <span>Total</span>
                 <strong id="checkout-total">
                 </strong>
+              </div>
+              <div class="small text-muted mt-2 d-flex align-items-center gap-1" id="checkout-beans-earn">
+                <span>☕</span> Earn <strong class="text-primary ms-1" id="checkout-earn-amount">+0 beans</strong>
               </div>
               <p class="small mb-0 mt-3">A student demo order. No payment will be taken.</p>
             </div>

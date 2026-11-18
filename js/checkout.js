@@ -1,9 +1,10 @@
 /**
  * Cafe Mania - Checkout Form Logic
  * Fulfills Requirement 5.2:
- * - NO HTML validation attributes used (no required, pattern, minlength, maxlength, min, max, type="email")
- * - Validates: Email format, Password length & complexity, Required fields, Phone number pattern
- * - Displays user-friendly error messages on the page under each field
+ * - Pure JavaScript validation without HTML validation attributes
+ * - Validates: Email format, Account Password verification, Required fields, Phone number pattern
+ * - Integrates Cafe Mania Club loyalty bonus beans toggle & live discount calculation
+ * - Deducts used beans, awards +5% new beans on purchase, and updates user profile
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -16,14 +17,13 @@ document.addEventListener('DOMContentLoaded', () => {
   checkoutForm.setAttribute('novalidate', 'true');
 
   // Input fields to validate in pure JS without HTML attributes
-  const requiredFieldIds = new Set(['name', 'email', 'phone', 'password', 'confirm-password']);
+  const requiredFieldIds = new Set(['name', 'email', 'phone', 'account-password']);
   const fields = [
     document.getElementById('name'),
     document.getElementById('email'),
     document.getElementById('phone'),
     document.getElementById('address'),
-    document.getElementById('password'),
-    document.getElementById('confirm-password')
+    document.getElementById('account-password')
   ].filter(Boolean);
 
   const steps = [...checkoutForm.querySelectorAll('[data-checkout-step]')];
@@ -31,23 +31,48 @@ document.addEventListener('DOMContentLoaded', () => {
   const backButton = document.getElementById('checkout-back');
   const submitButton = document.getElementById('checkout-submit');
   const address = document.getElementById('address');
+  
+  // Loyalty Beans Elements
+  const useBeansToggle = document.getElementById('useBeansToggle');
+  const beansAvailableText = document.getElementById('beans-available-text');
+  const beansDiscountNotice = document.getElementById('beans-discount-notice');
+  const beansSummaryLine = document.getElementById('checkout-beans-line');
+  const beansDiscountAmount = document.getElementById('checkout-beans-discount');
+  const beansEarnAmount = document.getElementById('checkout-earn-amount');
+
   let currentStep = 0;
   let submitting = false;
 
-  // Auto-fill logged in user info if available
-  if (window.CafeAuth && typeof window.CafeAuth.getCurrentUser === 'function') {
-    const user = window.CafeAuth.getCurrentUser();
-    if (user) {
-      if (document.getElementById('name') && !document.getElementById('name').value) {
-        document.getElementById('name').value = user.name;
-      }
-      if (document.getElementById('email') && !document.getElementById('email').value) {
-        document.getElementById('email').value = user.email;
-      }
-      if (document.getElementById('phone') && !document.getElementById('phone').value && user.phone) {
-        document.getElementById('phone').value = user.phone;
-      }
+  // Auto-fill logged in user info & initialize loyalty beans
+  const currentUser = window.CafeAuth && typeof window.CafeAuth.getCurrentUser === 'function' 
+    ? window.CafeAuth.getCurrentUser() 
+    : null;
+
+  let availableBeans = 0;
+  if (currentUser) {
+    if (document.getElementById('name') && !document.getElementById('name').value) {
+      document.getElementById('name').value = currentUser.name;
     }
+    if (document.getElementById('email') && !document.getElementById('email').value) {
+      document.getElementById('email').value = currentUser.email;
+    }
+    if (document.getElementById('phone') && !document.getElementById('phone').value && currentUser.phone) {
+      document.getElementById('phone').value = currentUser.phone;
+    }
+    availableBeans = Number(currentUser.beansBalance) || 0;
+  }
+
+  if (beansAvailableText) {
+    beansAvailableText.textContent = `Available: ${availableBeans} beans (1 bean = 1 ₸ discount)`;
+  }
+  if (availableBeans === 0 && useBeansToggle) {
+    useBeansToggle.disabled = true;
+  }
+
+  function getBeansDiscount() {
+    if (!useBeansToggle || !useBeansToggle.checked || availableBeans <= 0) return 0;
+    const maxApplicable = cart.subtotal();
+    return Math.min(availableBeans, maxApplicable);
   }
 
   const errorFor = (field) => {
@@ -112,24 +137,23 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // 6. Password length and complexity validation
-    if (field.id === 'password') {
-      if (window.CafeValidation) {
-        const err = window.CafeValidation.validatePassword(value);
-        if (err) return err;
-      } else {
-        if (value.length < 8) return 'Password must be at least 8 characters long.';
-        if (!/[A-Z]/.test(value) || !/[a-z]/.test(value) || !/\d/.test(value) || !/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(value)) {
-          return 'Include uppercase and lowercase letters, a number and a special symbol.';
-        }
+    // 6. Account Password validation: verifies against user's account password
+    if (field.id === 'account-password') {
+      if (!value) {
+        return 'Please enter your account password to confirm the order.';
       }
-    }
+      const enteredEmail = (document.getElementById('email')?.value || '').trim().toLowerCase();
+      const users = (window.CafeAuth && typeof window.CafeAuth.getUsers === 'function') ? window.CafeAuth.getUsers() : [];
+      const matchedUser = currentUser || users.find(u => u.email.toLowerCase() === enteredEmail);
 
-    // 7. Confirm password validation
-    if (field.id === 'confirm-password') {
-      const password = checkoutForm.querySelector('#password');
-      if (password && field.value !== password.value) {
-        return 'Passwords do not match.';
+      if (matchedUser) {
+        if (value !== matchedUser.password) {
+          return `Incorrect password for ${matchedUser.email}.`;
+        }
+      } else {
+        if (value.length < 6) {
+          return 'Password must be at least 6 characters.';
+        }
       }
     }
 
@@ -171,6 +195,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const note = document.getElementById('message').value.trim();
     if (note) lines.push(`Order note: ${note}`);
     if (document.getElementById('callme').checked) lines.push('Please call when the order is ready.');
+    if (useBeansToggle && useBeansToggle.checked) {
+      lines.push(`Loyalty beans discount applied: -${money(getBeansDiscount())}`);
+    }
     for (const text of lines) review.append(element('p', 'mb-1', text));
     const colorLine = element('p', 'mb-0 d-flex align-items-center gap-2', 'Package color');
     const swatch = element('span', 'package-swatch');
@@ -216,9 +243,6 @@ document.addEventListener('DOMContentLoaded', () => {
   fields.forEach((field) => {
     field.addEventListener('input', () => {
       validateField(field);
-      if (field.id === 'password' && document.getElementById('confirm-password').value) {
-        validateField(document.getElementById('confirm-password'));
-      }
     });
     field.addEventListener('blur', () => {
       if (field.type !== 'password') field.value = field.value.trim();
@@ -243,12 +267,35 @@ document.addEventListener('DOMContentLoaded', () => {
       row.append(element('span', '', `${product.name} × ${item.quantity}`), element('strong', '', money(product.price * item.quantity)));
       list.append(row);
     }
-    document.getElementById('checkout-subtotal').textContent = money(cart.subtotal());
+
+    const subtotal = cart.subtotal();
+    const delivery = cart.delivery();
+    const beansDiscount = getBeansDiscount();
+    const finalTotal = Math.max(0, subtotal + delivery - beansDiscount);
+
+    document.getElementById('checkout-subtotal').textContent = money(subtotal);
     document.getElementById('checkout-method-label').textContent = cart.method === 'delivery' ? 'Delivery' : 'Pick up';
-    document.getElementById('checkout-delivery').textContent = cart.delivery() ? money(cart.delivery()) : 'Free';
-    document.getElementById('checkout-total').textContent = money(cart.total());
+    document.getElementById('checkout-delivery').textContent = delivery ? money(delivery) : 'Free';
+    
+    if (beansDiscount > 0) {
+      beansSummaryLine?.classList.remove('d-none');
+      if (beansDiscountAmount) beansDiscountAmount.textContent = `-${money(beansDiscount)}`;
+      beansDiscountNotice?.classList.remove('d-none');
+      if (beansDiscountNotice) beansDiscountNotice.textContent = `✓ Applied ${money(beansDiscount)} discount using your bonus beans!`;
+    } else {
+      beansSummaryLine?.classList.add('d-none');
+      beansDiscountNotice?.classList.add('d-none');
+    }
+
+    document.getElementById('checkout-total').textContent = money(finalTotal);
+    if (beansEarnAmount) {
+      beansEarnAmount.textContent = `+${Math.round(finalTotal * 0.05)} beans`;
+    }
+
     if (currentStep === 2) updateReview();
   }
+
+  useBeansToggle?.addEventListener('change', renderSummary);
   document.querySelectorAll('[name="delivery"]').forEach((radio) => radio.addEventListener('change', () => cart.setMethod(radio.value)));
   document.addEventListener('cafe:cart-change', renderSummary);
 
@@ -264,12 +311,21 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
     if (!cart.items.length) { renderSummary(); return; }
+
     submitting = true;
     submitButton.disabled = true;
     submitButton.setAttribute('aria-busy', 'true');
     submitButton.dataset.originalLabel = submitButton.textContent.trim();
-    submitButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>Please wait...';
-    const order = cart.placeOrder();
+    submitButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>Placing order...';
+
+    const beansDiscount = getBeansDiscount();
+    const order = cart.placeOrder({
+      beansDiscount: beansDiscount,
+      customerName: document.getElementById('name').value.trim(),
+      customerEmail: document.getElementById('email').value.trim(),
+      customerPhone: document.getElementById('phone').value.trim()
+    });
+
     if (!order) {
       document.getElementById('checkout-error').textContent = 'Your order could not be saved. Enable browser storage or free some space, then try again.';
       submitting = false;
@@ -279,13 +335,18 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // If order placed, also register bonus beans for the user in localStorage
-    if (window.CafeAuth && typeof window.CafeAuth.getCurrentUser === 'function') {
-      const user = window.CafeAuth.getCurrentUser();
-      if (user) {
-        user.beansBalance = (user.beansBalance || 0) + Math.round(cart.total() * 0.05); // 5% bonus beans!
-        user.ordersCount = (user.ordersCount || 0) + 1;
-        window.CafeAuth.setCurrentUser(user);
+    // Deduct used beans & award new beans on order
+    if (currentUser) {
+      currentUser.beansBalance = Math.max(0, (currentUser.beansBalance || 0) - beansDiscount) + (order.beansEarned || Math.round(order.total * 0.05));
+      currentUser.ordersCount = (currentUser.ordersCount || 0) + 1;
+      window.CafeAuth.setCurrentUser(currentUser);
+
+      const users = window.CafeAuth.getUsers();
+      const uIdx = users.findIndex(u => u.email.toLowerCase() === currentUser.email.toLowerCase());
+      if (uIdx >= 0) {
+        users[uIdx].beansBalance = currentUser.beansBalance;
+        users[uIdx].ordersCount = currentUser.ordersCount;
+        try { localStorage.setItem('cafe-mania-users', JSON.stringify(users)); } catch (_) {}
       }
     }
 
@@ -295,8 +356,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.addEventListener('pageshow', (event) => {
     if (!event.persisted) return;
-    document.getElementById('password').value = '';
-    document.getElementById('confirm-password').value = '';
+    if (document.getElementById('account-password')) {
+      document.getElementById('account-password').value = '';
+    }
     submitting = false;
     submitButton.disabled = false;
     submitButton.removeAttribute('aria-busy');

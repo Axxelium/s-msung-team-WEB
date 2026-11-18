@@ -81,16 +81,39 @@
     subtotal() { return this.items.reduce((sum, item) => sum + app.productById(item.id).price * item.quantity, 0); },
     delivery() { return this.items.length && this.method === 'delivery' ? 700 : 0; },
     total() { return this.subtotal() + this.delivery(); },
-    placeOrder() {
+    placeOrder(options = {}) {
       if (!this.items.length) return null;
+      const discount = Math.max(0, Number(options.beansDiscount) || 0);
+      const subtotal = this.subtotal();
+      const delivery = this.delivery();
+      const finalTotal = Math.max(0, subtotal + delivery - discount);
+      const beansEarned = Math.round(finalTotal * 0.05);
+
       const order = {
         id: `CM-${Date.now().toString(36).toUpperCase()}`,
         createdAt: new Date().toISOString(),
         items: this.items.map((item) => ({ ...item })),
         method: this.method,
-        subtotal: this.subtotal(), delivery: this.delivery(), total: this.total(), rating: 0
+        subtotal: subtotal,
+        delivery: delivery,
+        beansDiscount: discount,
+        beansEarned: beansEarned,
+        total: finalTotal,
+        customerName: options.customerName || '',
+        customerEmail: options.customerEmail || '',
+        customerPhone: options.customerPhone || '',
+        rating: 0
       };
       if (!app.storage.write(orderKey, order)) return null;
+
+      // Save order to permanent customer order history
+      try {
+        const historyKey = 'cafe-mania-orders-history';
+        const history = JSON.parse(localStorage.getItem(historyKey) || '[]');
+        history.unshift(order);
+        localStorage.setItem(historyKey, JSON.stringify(history.slice(0, 20)));
+      } catch (_) {}
+
       this.items = [];
       this.save();
       return order;
