@@ -61,7 +61,7 @@
             </div>
 
             <!-- Tab Switcher -->
-            <ul class="nav nav-pills nav-fill mb-4 bg-light p-1 rounded-pill" id="authTabs" role="tablist">
+            <ul class="nav nav-pills nav-fill mb-4 p-1 rounded-pill shadow-sm" id="authTabs" role="tablist">
               <li class="nav-item" role="presentation">
                 <button class="nav-link active rounded-pill fw-bold" id="login-tab" data-bs-toggle="pill" data-bs-target="#login-panel" type="button" role="tab" aria-selected="true">
                   Log In
@@ -189,14 +189,15 @@
       const loginForm = document.getElementById('loginForm');
       const loginEmail = document.getElementById('loginEmail');
       const loginPassword = document.getElementById('loginPassword');
-      const loginGeneralError = document.getElementById('loginGeneralError');
+      const loginGeneralError = document.getElementById('login-general-error');
+      const loginSubmitBtn = document.getElementById('loginSubmitBtn');
 
       CafeValidation.bindField(loginEmail, val => CafeValidation.validateEmail(val));
       CafeValidation.bindField(loginPassword, val => CafeValidation.validateRequired(val, 'Password'));
 
       loginForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        loginGeneralError.classList.add('d-none');
+        if (loginGeneralError) loginGeneralError.classList.add('d-none');
 
         const emailErr = CafeValidation.validateEmail(loginEmail.value);
         const passErr = CafeValidation.validateRequired(loginPassword.value, 'Password');
@@ -210,13 +211,26 @@
 
         if (!isValid) return;
 
-        const result = CafeAuth.logIn(loginEmail.value, loginPassword.value);
-        if (result.success) {
-          window.location.href = 'profile.html';
-        } else {
-          loginGeneralError.textContent = result.message;
-          loginGeneralError.classList.remove('d-none');
+        if (loginSubmitBtn) {
+          loginSubmitBtn.disabled = true;
+          loginSubmitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>Signing in...';
         }
+
+        setTimeout(() => {
+          const result = CafeAuth.logIn(loginEmail.value, loginPassword.value);
+          if (result.success) {
+            window.location.assign('profile.html');
+          } else {
+            if (loginSubmitBtn) {
+              loginSubmitBtn.disabled = false;
+              loginSubmitBtn.textContent = 'Log In to Cafe Mania →';
+            }
+            if (loginGeneralError) {
+              loginGeneralError.textContent = result.message;
+              loginGeneralError.classList.remove('d-none');
+            }
+          }
+        }, 300);
       });
 
       // --- SIGN UP FORM VALIDATION & HANDLING ---
@@ -226,7 +240,8 @@
       const signupPhone = document.getElementById('signupPhone');
       const signupPassword = document.getElementById('signupPassword');
       const signupPasswordConfirm = document.getElementById('signupPasswordConfirm');
-      const signupGeneralError = document.getElementById('signupGeneralError');
+      const signupGeneralError = document.getElementById('signup-general-error');
+      const signupSubmitBtn = document.getElementById('signupSubmitBtn');
 
       CafeValidation.bindField(signupName, val => CafeValidation.validateRequired(val, 'Full name'));
       CafeValidation.bindField(signupEmail, val => CafeValidation.validateEmail(val));
@@ -240,7 +255,7 @@
 
       signupForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        signupGeneralError.classList.add('d-none');
+        if (signupGeneralError) signupGeneralError.classList.add('d-none');
 
         const nameErr = CafeValidation.validateRequired(signupName.value, 'Full name');
         const emailErr = CafeValidation.validateEmail(signupEmail.value);
@@ -259,19 +274,32 @@
 
         if (!isValid) return;
 
-        const result = CafeAuth.signUp({
-          name: signupName.value,
-          email: signupEmail.value,
-          phone: signupPhone.value,
-          password: signupPassword.value
-        });
-
-        if (result.success) {
-          window.location.href = 'profile.html';
-        } else {
-          signupGeneralError.textContent = result.message;
-          signupGeneralError.classList.remove('d-none');
+        if (signupSubmitBtn) {
+          signupSubmitBtn.disabled = true;
+          signupSubmitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>Creating account...';
         }
+
+        setTimeout(() => {
+          const result = CafeAuth.signUp({
+            name: signupName.value,
+            email: signupEmail.value,
+            phone: signupPhone.value,
+            password: signupPassword.value
+          });
+
+          if (result.success) {
+            window.location.assign('profile.html');
+          } else {
+            if (signupSubmitBtn) {
+              signupSubmitBtn.disabled = false;
+              signupSubmitBtn.textContent = 'Create Account & Earn 150 Beans ☕';
+            }
+            if (signupGeneralError) {
+              signupGeneralError.textContent = result.message;
+              signupGeneralError.classList.remove('d-none');
+            }
+          }
+        }, 300);
       });
     });
   </script>

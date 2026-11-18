@@ -1003,3 +1003,40 @@ body.dark-theme .api-explorer-section code {
 body, #main-header, footer, .card, .page, .summary, .form-card {
     transition: background-color 0.28s ease, color 0.28s ease, border-color 0.28s ease;
 }
+
+/* Authentication Tab Switcher (Brand style with thin borders, replacing default blue) */
+#authTabs {
+    background: var(--sand) !important;
+    border: 1px solid var(--line) !important;
+    padding: 0.35rem !important;
+    gap: 0.3rem !important;
+}
+#authTabs .nav-link {
+    color: var(--ink) !important;
+    background: transparent !important;
+    border: 1px solid transparent !important;
+    transition: all 0.22s ease !important;
+}
+#authTabs .nav-link:hover:not(.active) {
+    background-color: color-mix(in srgb, var(--wine) 12%, transparent) !important;
+    color: var(--wine) !important;
+    border-color: var(--line) !important;
+}
+#authTabs .nav-link.active {
+    background-color: var(--wine) !important;
+    color: #ffffff !important;
+    border: 1px solid var(--wine-dark) !important;
+    box-shadow: 0 2px 8px rgba(89, 23, 34, 0.25) !important;
+}
+body.dark-theme #authTabs {
+    background: #2b2523 !important;
+    border-color: var(--line) !important;
+}
+body.dark-theme #authTabs .nav-link {
+    color: var(--ink) !important;
+}
+body.dark-theme #authTabs .nav-link.active {
+    background-color: var(--wine) !important;
+    color: #ffffff !important;
+    border-color: #efb5ac !important;
+}
