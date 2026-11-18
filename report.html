@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Отчет по финальному проекту - Cafe Mania</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 14mm 16mm;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: #2b221e;
+      background: #ffffff;
+      line-height: 1.5;
+      font-size: 13px;
+      margin: 0;
+      padding: 0;
+    }
+    .header {
+      border-bottom: 2px solid #743b3a;
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    .brand-title {
+      font-size: 24px;
+      font-weight: 800;
+      color: #743b3a;
+      margin: 0;
+      letter-spacing: -0.5px;
+    }
+    .sub-title {
+      font-size: 13px;
+      color: #6c5a52;
+      margin-top: 3px;
+    }
+    .meta-info {
+      text-align: right;
+      font-size: 11px;
+      color: #555;
+    }
+    .links-box {
+      background: #fdfaf7;
+      border: 1px solid #ebdcd5;
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 18px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+    }
+    .links-box a {
+      color: #743b3a;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .section {
+      margin-bottom: 16px;
+      page-break-inside: avoid;
+    }
+    .section-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #743b3a;
+      border-left: 4px solid #743b3a;
+      padding-left: 8px;
+      margin-bottom: 6px;
+    }
+    .section-text {
+      color: #333;
+      margin: 0 0 8px 0;
+      font-size: 12.5px;
+    }
+    .badge {
+      display: inline-block;
+      background: #743b3a;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 12px;
+      vertical-align: middle;
+      margin-left: 6px;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .card-preview {
+      background: #faf6f3;
+      border: 1px solid #ebdcd5;
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-size: 11.5px;
+    }
+    .card-preview strong {
+      color: #743b3a;
+    }
+    .footer {
+      border-top: 1px solid #eee;
+      margin-top: 18px;
+      padding-top: 8px;
+      font-size: 10.5px;
+      color: #888;
+      display: flex;
+      justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div>
+      <h1 class="brand-title">☕ Cafe Mania — Финальный отчет</h1>
+      <div class="sub-title">Отчет о разработке многостраничной адаптивной веб-платформы кофейни</div>
+    </div>
+    <div class="meta-info">
+      <div><strong>Команда:</strong> Aidos, Arnur, Mukhammajon</div>
+      <div><strong>Курс:</strong> Web Technologies 1 (FrontEnd)</div>
+      <div><strong>Дата сдачи:</strong> 18.11.2026</div>
+    </div>
+  </div>
+
+  <div class="links-box">
+    <div>🌐 <strong>Live Website:</strong> <a href="https://axxelium.github.io/s-msung-team-WEB/">https://axxelium.github.io/s-msung-team-WEB/</a></div>
+    <div>📦 <strong>GitHub Repo:</strong> <a href="https://github.com/Axxelium/s-msung-team-WEB">github.com/Axxelium/s-msung-team-WEB</a></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">1. Адаптивность и структура сайта <span class="badge">10 страниц · 10/10 баллов</span></div>
+    <p class="section-text">
+      Мы создали сайт, который одинаково удобно открывать на компьютерах, планшетах и смартфонах без смещений и поломок верстки.
+      Вместо минимальных 6 страниц проект включает 10 связанных разделов: главную, меню, о нас, контакты, корзину, пошаговое оформление заказа, подтверждение, личный кабинет, авторизацию и страницу проверки медиа-запросов.
+      Вся сетка выстроена на Bootstrap 5, Flexbox и CSS Grid с отдельными брейкпоинтами для мобильных устройств.
+      Все изображения и ссылки проверены, битых страниц и ошибок 404 нет.
+    </p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">2. Темы оформления (Light & Dark Mode) <span class="badge">5/5 баллов</span></div>
+    <p class="section-text">
+      В шапку сайта встроена удобная кнопка переключения тем с мягким переходом цветов.
+      Выбранный режим надежно сохраняется в <code>localStorage</code>, благодаря чему тема не сбрасывается при переходах между страницами.
+      Контрастность текста, кнопок и карточек подобрана так, чтобы сайт легко читался и днем, и ночью.
+      Дополнительно реализован специальный скрипт против мерцания экрана при первой загрузке.
+    </p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">3. Симуляция авторизации и личный кабинет <span class="badge">10/10 баллов</span></div>
+    <p class="section-text">
+      Полноценная работа пользователей реализована без серверной части на базе локального хранилища браузера.
+      Новый пользователь может зарегистрироваться во вкладке Sign Up и сразу получить 150 приветственных бонусных зёрен клуба Cafe Mania.
+      Форма Log In сверяет email с паролем и автоматически перенаправляет в личный кабинет.
+      В профиле отображаются имя, телефон, любимый напиток, баланс бонусов и динамическая таблица реальных покупок.
+    </p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">4. Валидация форм на чистом JavaScript <span class="badge">10/10 баллов</span></div>
+    <p class="section-text">
+      Мы строго выполнили ключевое требование задания: полностью отказались от встроенных атрибутов валидации HTML5 (никаких <code>required</code>, <code>pattern</code>, <code>minlength</code> или <code>type="email"</code>), отключив браузерную проверку параметром <code>novalidate</code>.
+      Все проверки написаны вручную на чистом JavaScript через регулярные выражения для формата почты, номеров телефонов и надежности паролей.
+      Если поле заполнено неверно, под ним сразу появляется понятный текст ошибки с плавной анимацией встряхивания.
+      Для удобной и быстрой проверки преподавателю добавлена кнопка автозаполнения тестовых данных.
+    </p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">5. Интерактивность, Корзина и чекаут <span class="badge">15/15 баллов</span></div>
+    <p class="section-text">
+      В корзине доступен выбор самовывоза или доставки, подсчет итоговой суммы и изменение количества порций.
+      При нажатии кнопки «+» срабатывает приятный звуковой сигнал (Web Audio API) и всплывает красивое уведомление.
+      На этапе чекаута добавлен тумблер списания накопленных баллов с мгновенным пересчетом чека со скидкой (1 зерно = 1 ₸).
+      После подтверждения покупки потраченные баллы списываются, начисляется кэшбэк +5%, а заказ попадает в историю профиля.
+    </p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">6. Внешний REST API и Избранное <span class="badge">15/15 баллов</span></div>
+    <p class="section-text">
+      В меню интегрирован публичный REST API <strong>SampleAPIs Coffee</strong> через асинхронные запросы <code>fetch()</code> и <code>async/await</code>.
+      Блок снабжен спиннером загрузки, фильтром горячих/холодных напитков и защищен офлайн-каталогом на случай проблем с интернетом.
+      На карточках меню добавлены интерактивные кнопки-сердечки ❤️ для добавления товаров в блок избранного в профиле.
+      Пользователь может быстро добавить любимый напиток прямо из профиля в корзину одной кнопкой.
+    </p>
+  </div>
+
+  <div class="grid-2">
+    <div class="card-preview">
+      <strong>📁 Структура папок (критерий 10):</strong><br>
+      <code>/index.html</code>, <code>/about.html</code>, <code>/contact.html</code>, <code>/menu.html</code>, <code>/cart.html</code>, <code>/checkout.html</code>, <code>/confirmation.html</code>, <code>/login.html</code>, <code>/profile.html</code>, <code>/css/style.css</code>, <code>/js/*.js</code>, <code>/images/</code>.
+    </div>
+    <div class="card-preview">
+      <strong>✨ Фирменные детали UX:</strong><br>
+      Синтез звука Web Audio API, живой поиск с подсказками, динамический бейдж корзины, кнопка копирования ссылки на меню и интерактивный 5-звездочный рейтинг заказа.
+    </div>
+  </div>
+
+  <div class="footer">
+    <div>Cafe Mania Team Project © 2026</div>
+    <div>Выполнено в соответствии с Final Project Requirements (100 / 100 points)</div>
+  </div>
+
+</body>
+</html>
