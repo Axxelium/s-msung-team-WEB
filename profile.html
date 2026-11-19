@@ -241,12 +241,15 @@
       document.getElementById('detailPhone').textContent = currentUser.phone || 'Not specified';
       document.getElementById('detailFavorite').textContent = currentUser.favoriteDrink || 'Cappuccino';
 
-      // Load orders history from localStorage
+      // Load orders history from localStorage (filtered by current user email)
       const ordersTableBody = document.getElementById('ordersTableBody');
       let ordersHistory = [];
       try {
         const stored = localStorage.getItem('cafe-mania-orders-history');
-        ordersHistory = stored ? JSON.parse(stored) : [];
+        const allOrders = stored ? JSON.parse(stored) : [];
+        ordersHistory = allOrders.filter(ord => 
+          ord.customerEmail && ord.customerEmail.toLowerCase() === currentUser.email.toLowerCase()
+        );
       } catch (_) {}
 
       ordersTableBody.innerHTML = '';
